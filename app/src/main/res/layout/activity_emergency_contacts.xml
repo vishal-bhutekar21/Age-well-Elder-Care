@@ -48,13 +48,15 @@
         android:id="@+id/morningTasksLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F1F5F9"
+        android:background="@drawable/empty_shape"
+        android:backgroundTint="@color/primarybg"
         android:layout_margin="15dp"
         android:padding="12dp">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            app:tint="#64748b"
             android:src="@drawable/call_vector"
             android:layout_marginTop="10dp"/>
         <LinearLayout
@@ -90,6 +92,7 @@
                 android:layout_width="25dp"
                 android:layout_height="30dp"
                 android:src="@drawable/ic_edit"
+                app:tint="#64748b"
                 android:layout_marginLeft="150dp"
                 android:layout_marginTop="10dp"/>
             <ImageView
@@ -97,20 +100,25 @@
                 android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/ic_delete"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                app:tint="#64748b" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F1F5F9"
+        android:background="@drawable/empty_shape"
+        android:backgroundTint="@color/primarybg"
         android:layout_margin="15dp"
         android:padding="12dp">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:drawableTint="#FFFFFF"
+            app:tint="#64748b"
+
             android:src="@drawable/call_vector"
             android:layout_marginTop="10dp"/>
         <LinearLayout
@@ -147,12 +155,14 @@
                 android:layout_height="30dp"
                 android:src="@drawable/ic_edit"
                 android:layout_marginLeft="150dp"
+                app:tint="#64748b"
                 android:layout_marginTop="10dp"/>
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/ic_delete"
+                app:tint="#64748b"
                 android:layout_marginTop="10dp"/>
         </LinearLayout>
     </LinearLayout>
@@ -160,13 +170,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F1F5F9"
+       android:background="@drawable/empty_shape"
+        android:backgroundTint="@color/primarybg"
         android:layout_margin="15dp"
         android:padding="12dp">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            app:tint="#64748b"
             android:src="@drawable/call_vector"
             android:layout_marginTop="10dp"/>
         <LinearLayout
@@ -203,12 +215,14 @@
                 android:layout_height="30dp"
                 android:src="@drawable/ic_edit"
                 android:layout_marginLeft="150dp"
+                app:tint="#64748b"
                 android:layout_marginTop="10dp"/>
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                app:tint="#64748b"
                 android:layout_marginLeft="10dp"
-                android:src="@drawable/call_vector"
+                android:src="@drawable/ic_delete"
                 android:layout_marginTop="10dp"/>
         </LinearLayout>
     </LinearLayout>
@@ -218,23 +232,27 @@
         android:id="@+id/id_send_live_location"
         android:text="Send Live Location"
         android:backgroundTint="#0D9488"
-        android:drawableLeft="@drawable/ic_msg"
+        android:drawableLeft="@drawable/ic_send"
         android:layout_margin="15dp"
+        android:drawableTint="#FFFFFF"
+
         android:textSize="20dp"
         android:layout_gravity="center"
         />
 
     <Button
+        android:id="@+id/id_btn_emergencycall"
         android:layout_width="340dp"
         android:layout_height="56dp"
-        android:id="@+id/id_btn_emergencycall"
-        android:text="Emergency Call"
+        android:layout_gravity="center"
+        android:layout_margin="15dp"
         android:backgroundTint="#0D9488"
         android:drawableLeft="@drawable/call_vector"
-        android:layout_margin="15dp"
-        android:textSize="20dp"
-        android:layout_gravity="center"
-        />
+        android:drawableTint="#FFFFFF"
+
+
+        android:text="Emergency Call"
+        android:textSize="20dp" />
 
 
 </LinearLayout>

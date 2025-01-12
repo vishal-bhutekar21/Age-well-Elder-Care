@@ -40,6 +40,22 @@ class Login : AppCompatActivity() {
 
 
         }
+        binding.btnVerifyOtp.setOnClickListener {
+            if(binding.etMobileNumber.length()==10 && binding.etOtp.length()==6){
+
+                if(binding.etOtp.text.toString()==Otp.toString()){
+
+                    Toast.makeText(this,"Verification Complete",Toast.LENGTH_SHORT).show()
+                    binding.btnVerifyOtp.isEnabled=false
+
+                }else{
+                    Toast.makeText(this,"Otp is incorrect $Otp",Toast.LENGTH_SHORT).show()
+                }
+            }else{
+                Toast.makeText(this,"Enter Valid Otp and Mobile",Toast.LENGTH_SHORT).show()
+
+            }
+        }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -56,6 +72,8 @@ class Login : AppCompatActivity() {
             try {
                 smsManager.sendTextMessage(phoneNumber, null, message, null, null)
                 Toast.makeText(this, "OTP sent successfully", Toast.LENGTH_SHORT).show()
+                binding.btnSendOtp.isEnabled=false
+
             } catch (e: Exception) {
                 Toast.makeText(this, "Failed to send OTP: ${e.message}", Toast.LENGTH_SHORT).show()
             }

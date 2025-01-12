@@ -1,8 +1,13 @@
 package com.chaitany.agewell
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.view.View
 import android.view.inputmethod.InputBinding
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.transition.Visibility
 import com.chaitany.agewell.databinding.ActivityLoginBinding
 import kotlin.properties.Delegates
 
@@ -23,6 +29,18 @@ class Login : AppCompatActivity() {
 
 
         setContentView(binding.root)
+
+        binding.btnLoginNow.setOnClickListener {
+            if(binding.btnVerifyOtp.isEnabled==false && binding.btnSendOtp.isEnabled==false){
+                Toast.makeText(this,"Login SuccessFull",Toast.LENGTH_SHORT).show()
+                val intent=Intent(this,Home::class.java)
+                startActivity(intent)
+                finish()
+
+            }else{
+                Toast.makeText(this,"Please Verify Otp",Toast.LENGTH_SHORT).show()
+            }
+        }
 
         binding.btnSendOtp.setOnClickListener {
 
@@ -57,6 +75,7 @@ class Login : AppCompatActivity() {
 
             }
         }
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -73,7 +92,10 @@ class Login : AppCompatActivity() {
             try {
                 smsManager.sendTextMessage(phoneNumber, null, message, null, null)
                 Toast.makeText(this, "OTP sent successfully", Toast.LENGTH_SHORT).show()
-                binding.btnSendOtp.isEnabled=false
+                startOtpTimer(binding.btnSendOtp,binding.tvTimer)
+
+
+
 
             } catch (e: Exception) {
                 Toast.makeText(this, "Failed to send OTP: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -97,5 +119,27 @@ class Login : AppCompatActivity() {
                     .show()
             }
         }
+    }
+    fun startOtpTimer(button: Button, timerTextView: TextView) {
+        // Disable the button when clicked
+        button.isEnabled = false
+
+        // Set up the countdown timer for 30 seconds (30,000 milliseconds)
+        val timer = object : CountDownTimer(30000, 1000) { // 30 seconds, 1-second intervals
+            override fun onTick(millisUntilFinished: Long) {
+                // Update the timer UI every second
+                val secondsRemaining = millisUntilFinished / 1000
+                timerTextView.text = "Resend Again:$secondsRemaining seconds remaining"
+            }
+
+            override fun onFinish() {
+                // Re-enable the button when the timer finishes
+                button.isEnabled = true
+                timerTextView.text = "Send OTP"
+            }
+        }
+
+        // Start the countdown timer
+        timer.start()
     }
 }

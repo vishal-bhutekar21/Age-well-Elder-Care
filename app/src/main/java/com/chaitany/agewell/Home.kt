@@ -1,8 +1,11 @@
 package com.chaitany.agewell
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -14,13 +17,22 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
+    private  lateinit var layout_emergency_contact: LinearLayout
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         // Initialize the DrawerLayout
         drawerLayout = findViewById(R.id.drawerLayout)
+        layout_emergency_contact=findViewById(R.id.layout_emergency_contact)
+
+        layout_emergency_contact.setOnClickListener {
+            var intent=Intent(this,Emergency_Contacts::class.java)
+            startActivity(intent)
+
+        }
 
         // Set up the ActionBarDrawerToggle
         toggle = ActionBarDrawerToggle(

@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.chaitany.agewell" />
+                  <option name="mobileSdkAppId" value="1:243302258780:android:84bb31b4bc37d444d92e99" />
+                  <option name="projectId" value="age-well-b177c" />
+                  <option name="projectNumber" value="243302258780" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -186,7 +186,7 @@ binding.btnSendOtp.setOnClickListener {
             }
         }
 
-        // Start the countdown timer
+
         timer.start()
     }
     private fun navigateToHome() {

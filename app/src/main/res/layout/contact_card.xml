@@ -24,6 +24,7 @@
         android:layout_marginStart="12dp">
 
         <TextView
+            android:id="@+id/contact_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Person Name"
@@ -41,6 +42,8 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/edit_button"
+
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:src="@drawable/ic_edit"
@@ -48,6 +51,7 @@
         app:tint="#64748B" />
 
     <ImageView
+        android:id="@+id/delete_button"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:src="@drawable/ic_delete"

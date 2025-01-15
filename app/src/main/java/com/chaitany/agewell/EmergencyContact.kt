@@ -1,5 +1,6 @@
 package com.chaitany.agewell
 
+import EmergencyContact
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle

@@ -1,109 +1,184 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white"
-    tools:context=".Emergency_Contacts">
+    tools:context=".Emergency">
 
-    <!-- AppBar Layout -->
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- Main Content -->
+    <LinearLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:background="@android:color/white">
 
-        <androidx.appcompat.widget.Toolbar
+        <!-- AppBar Layout -->
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:background="@android:color/white">
 
-            <RelativeLayout
+            <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/white">
 
-                <ImageButton
-                    android:id="@+id/menuButton"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_menu" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <ImageButton
+                        android:id="@+id/menuButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_menu" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="56dp"
+                        android:text="Emergency Contacts"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <!-- Contact Cards -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Contact Card Template -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="56dp"
-                    android:text="Emergency Contacts"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
-        </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
+                    android:orientation="horizontal"
+                    android:background="@drawable/empty_shape"
+                    android:backgroundTint="@color/primarybg"
+                    android:layout_margin="10dp"
+                    android:padding="12dp">
 
-    <!-- Contact Cards -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="10dp">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/call_vector"
+                        android:layout_marginTop="8dp"
+                        app:tint="#64748B" />
 
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:id="@+id/contact_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Person Name"
+                            android:textColor="#64748B"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/contact_number"
+                            android:text="8812321632"
+                            android:background="@drawable/empty_shape"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <!-- Buttons (Edit/Delete Above Live Location and Emergency Call) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:gravity="center">
 
-            <!-- Contact Card Template -->
-            <include
-                layout="@layout/contact_card"
-                android:id="@+id/card_person_one" />
+            <!-- Edit Button -->
+            <Button
+                android:id="@+id/edit_button"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:backgroundTint="#0D9488"
+                android:drawableTint="#FFFFFF"
+                android:paddingLeft="10dp"
+                android:text="Edit Contact"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
 
-            <include
-                layout="@layout/contact_card"
-                android:id="@+id/card_person_two" />
+            <!-- Delete Button -->
+            <Button
+                android:id="@+id/delete_button"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="#F44336"
+                android:drawableTint="#FFFFFF"
+                android:paddingLeft="10dp"
+                android:text="Delete Contact"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
 
-            <include
-                layout="@layout/contact_card"
-                android:id="@+id/card_person_three" />
+            <!-- Emergency Location Button -->
+            <Button
+                android:id="@+id/id_send_live_location"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:backgroundTint="#0D9488"
+                android:drawableLeft="@drawable/ic_send"
+                android:drawableTint="#FFFFFF"
+                android:paddingLeft="10dp"
+                android:text="Send Live Location"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <!-- Emergency Call Button -->
+            <Button
+                android:id="@+id/id_btn_emergencycall"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="#0D9488"
+                android:drawableLeft="@drawable/call_vector"
+                android:drawableTint="#FFFFFF"
+                android:paddingLeft="10dp"
+                android:text="Emergency Call"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
         </LinearLayout>
-    </ScrollView>
-
-    <!-- Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/id_send_live_location"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:backgroundTint="#0D9488"
-            android:drawableLeft="@drawable/ic_send"
-            android:drawableTint="#FFFFFF"
-            android:paddingLeft="10dp"
-            android:text="Send Live Location"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/id_btn_emergencycall"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="10dp"
-            android:backgroundTint="#0D9488"
-            android:drawableLeft="@drawable/call_vector"
-            android:drawableTint="#FFFFFF"
-            android:paddingLeft="10dp"
-            android:text="Emergency Call"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
     </LinearLayout>
-</LinearLayout>
+
+    <!-- Navigation View -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        app:menu="@menu/drawer_menu"
+        app:headerLayout="@layout/nav_header" />
+</androidx.drawerlayout.widget.DrawerLayout>

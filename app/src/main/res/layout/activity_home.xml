@@ -317,6 +317,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="BMI Index"
+                            android:id="@+id/txt_bmi_index"
                             android:textColor="@android:color/black"
                             android:textSize="16sp" />
 

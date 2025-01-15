@@ -19,6 +19,9 @@
         android:theme="@style/Theme.AgeWell"
         tools:targetApi="31">
         <activity
+            android:name=".BMI_Calculator"
+            android:exported="false" />
+        <activity
             android:name=".Emergency_Contacts"
             android:exported="false" />
         <activity
@@ -35,7 +38,7 @@
             android:exported="false" />
         <activity
             android:name=".Splash"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>

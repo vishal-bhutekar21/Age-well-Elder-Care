@@ -24,6 +24,7 @@ class Login : AppCompatActivity() {
     private var Otp by Delegates.notNull<Int>()
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var sharedPreferences: android.content.SharedPreferences
+    private lateinit var bmitxt: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical"
+    android:fillViewport="true"
+    android:background="@color/white"
+    tools:context=".BMI_Calculator">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white">
+
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/white">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageButton
+                        android:id="@+id/menuButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_menu" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="56dp"
+                        android:text="BMI Calculator"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter Your details for personalized BMI Calculation"
+            android:textSize="15dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_marginLeft="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Height"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="16dp" />
+
+        <EditText
+            android:id="@+id/et_height"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_margin="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:background="@drawable/edittext_shape"
+            android:hint="  Enter height in cm"
+            android:padding="10dp"
+            android:drawableLeft="@drawable/ic_height" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weight"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="16dp" />
+
+        <EditText
+            android:id="@+id/et_weight"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_margin="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:background="@drawable/edittext_shape"
+            android:hint="  Enter weight in kg"
+            android:padding="10dp"
+            android:drawableLeft="@drawable/ic_weight" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Age"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
+            android:textSize="16dp"
+            android:layout_marginLeft="16dp" />
+
+        <EditText
+            android:id="@+id/et_age"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_margin="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:background="@drawable/edittext_shape"
+            android:hint="  Enter age in numbers"
+            android:padding="10dp"
+            android:drawableLeft="@drawable/ic_age" />
+
+        <Button
+            android:id="@+id/id_btn_calculate_bmi"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:backgroundTint="#0D9488"
+            android:drawableLeft="@drawable/ic_calculate"
+            android:drawableTint="#FFFFFF"
+            android:paddingLeft="10dp"
+            android:layout_margin="10dp"
+            android:text="Calculate BMI"
+            android:textColor="@android:color/white"
+            android:textSize="20dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:id="@+id/et_display_bmi"
+            android:background="@drawable/edittext_shape"
+            android:layout_margin="10dp"
+            android:textColor="@color/black"
+            android:focusable="false"
+            android:padding="10dp"
+            android:focusableInTouchMode="false"
+            android:textColorHint="@color/black"
+            android:backgroundTint="#EEF2FF"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recommended Actions:"
+            android:layout_marginLeft="10dp"
+            android:textSize="18dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:id="@+id/recommended_action" />
+
+    </LinearLayout>
+</ScrollView>

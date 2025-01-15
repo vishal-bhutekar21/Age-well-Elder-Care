@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -18,15 +19,26 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
     private  lateinit var layout_emergency_contact: LinearLayout
+    private lateinit var bmitxt: TextView
+
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // Initialize the DrawerLayout
+        bmitxt = findViewById(R.id.txt_bmi_index)
         drawerLayout = findViewById(R.id.drawerLayout)
         layout_emergency_contact=findViewById(R.id.layout_emergency_contact)
+
+        // Initialize the DrawerLayout
+
+
+            bmitxt.setOnClickListener {
+                // Navigate to BMIActivity
+                val intent = Intent(this, BMI_Calculator::class.java)
+                startActivity(intent)
+            }
 
         layout_emergency_contact.setOnClickListener {
             var intent=Intent(this,EmergencyContact::class.java)

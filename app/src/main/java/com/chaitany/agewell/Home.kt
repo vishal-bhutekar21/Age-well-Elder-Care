@@ -18,6 +18,7 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
     private  lateinit var layout_emergency_contact: LinearLayout
+    private  lateinit var layout_medical_stock: LinearLayout
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,12 +28,19 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         // Initialize the DrawerLayout
         drawerLayout = findViewById(R.id.drawerLayout)
         layout_emergency_contact=findViewById(R.id.layout_emergency_contact)
+        layout_medical_stock=findViewById(R.id.layout_medical_stock)
 
         layout_emergency_contact.setOnClickListener {
             var intent=Intent(this,Emergency_Contacts::class.java)
             startActivity(intent)
 
         }
+        layout_medical_stock.setOnClickListener {
+            var intent=Intent(this,MedicalStockActivity::class.java)
+            startActivity(intent)
+
+        }
+
 
         // Set up the ActionBarDrawerToggle
         toggle = ActionBarDrawerToggle(

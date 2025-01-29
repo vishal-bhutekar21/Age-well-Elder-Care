@@ -225,6 +225,7 @@
                     app:cardElevation="4dp">
 
                     <LinearLayout
+                        android:id="@+id/layout_medical_stock"
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
                         android:background="#E8F1FF"

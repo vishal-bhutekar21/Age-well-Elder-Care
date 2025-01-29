@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -14,37 +13,26 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 
-class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class Emergency_Contact : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
-    private  lateinit var layout_emergency_contact: LinearLayout
-    private lateinit var bmitxt: TextView
-
+   // private  lateinit var layout_emergency_contact: LinearLayout
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-
-        bmitxt = findViewById(R.id.txt_bmi_index)
-        drawerLayout = findViewById(R.id.drawerLayout)
-        layout_emergency_contact=findViewById(R.id.layout_emergency_contact)
+        setContentView(R.layout.activity_emergency_contacts)
 
         // Initialize the DrawerLayout
+        drawerLayout = findViewById(R.id.drawerLayout)
+//layout_emergency_contact=findViewById(R.id.layout_emergency_contact)
 
-
-            bmitxt.setOnClickListener {
-                // Navigate to BMIActivity
-                val intent = Intent(this, BMI_Calculator::class.java)
-                startActivity(intent)
-            }
-
-        layout_emergency_contact.setOnClickListener {
-            var intent=Intent(this,EmergencyContact::class.java)
-            startActivity(intent)
-
-        }
+//        layout_emergency_contact.setOnClickListener {
+//            var intent=Intent(this,Emergency_Contact::class.java)
+//            startActivity(intent)
+//
+//        }
 
         // Set up the ActionBarDrawerToggle
         toggle = ActionBarDrawerToggle(

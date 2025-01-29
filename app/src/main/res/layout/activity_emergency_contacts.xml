@@ -5,7 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Emergency">
+    tools:context=".Emergency_Contact">
 
     <!-- Main Content -->
     <LinearLayout
@@ -36,7 +36,7 @@
                         android:layout_height="48dp"
                         android:layout_centerVertical="true"
                         android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_menu" />
+                        android:src="@drawable/ic_age" />
 
                     <TextView
                         android:layout_width="wrap_content"

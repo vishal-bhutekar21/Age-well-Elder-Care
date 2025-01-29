@@ -191,7 +191,7 @@ binding.btnSendOtp.setOnClickListener {
         timer.start()
     }
     private fun navigateToHome() {
-        val intent = Intent(this, Home::class.java)
+        val intent = Intent(this, Dashboard::class.java)
         startActivity(intent)
         finish()
     }

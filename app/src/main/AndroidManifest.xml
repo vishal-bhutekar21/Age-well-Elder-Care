@@ -24,15 +24,9 @@
         <activity
             android:name=".MedicalStockActivity"
             android:exported="false" />
-        <activity
-            android:name=".AddMedicine"
-            android:exported="false" />
-        <activity
-            android:name=".NewMedicalStock"
-            android:exported="false" />
-        <activity
-            android:name=".MedicalStock"
-            android:exported="false" />
+
+
+
         <activity
             android:name=".Emergency_Contacts"
             android:exported="false" />

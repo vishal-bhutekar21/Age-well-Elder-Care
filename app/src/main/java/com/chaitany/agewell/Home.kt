@@ -27,8 +27,6 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
 
         // Initialize the DrawerLayout
         drawerLayout = findViewById(R.id.drawerLayout)
-        layout_emergency_contact=findViewById(R.id.layout_emergency_contact)
-        layout_medical_stock=findViewById(R.id.layout_medical_stock)
 
         layout_emergency_contact.setOnClickListener {
             var intent=Intent(this,Emergency_Contacts::class.java)

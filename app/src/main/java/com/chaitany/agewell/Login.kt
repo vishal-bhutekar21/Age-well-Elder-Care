@@ -34,7 +34,7 @@ class Login : AppCompatActivity() {
 
         // Check if the user is already logged in
         if (sharedPreferences.getBoolean("isLoggedIn", false)) {
-            navigateToHome()
+
         }
 
         // Enable Edge-to-Edge UI
@@ -70,7 +70,7 @@ class Login : AppCompatActivity() {
 
                         // Display success message and navigate to Home
                         Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                        navigateToHome()
+
                     }.addOnFailureListener { e ->
                         Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
@@ -189,9 +189,5 @@ binding.btnSendOtp.setOnClickListener {
 
         timer.start()
     }
-    private fun navigateToHome() {
-        val intent = Intent(this, Home::class.java)
-        startActivity(intent)
-        finish()
-    }
+
 }

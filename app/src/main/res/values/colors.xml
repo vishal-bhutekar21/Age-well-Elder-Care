@@ -16,4 +16,15 @@
     <color name="primary_light">#400D9488</color>
 
 
+        <color name="mint">#0D9488</color>
+        <color name="mint_light">#F0FDFA</color>
+        <color name="warning">#D97706</color>
+        <color name="warning_light">#FEF3C7</color>
+        <color name="info">#2563EB</color>
+        <color name="info_light">#DBEAFE</color>
+        <color name="text_primary">#111827</color>
+        <color name="text_secondary">#6B7280</color>
+
+
+
 </resources>

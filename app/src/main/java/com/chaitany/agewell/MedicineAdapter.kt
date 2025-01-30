@@ -19,8 +19,8 @@ class MedicineAdapter(
         val tvMedicineName: TextView = itemView.findViewById(R.id.tvMedicineName)
         val tvDosage: TextView = itemView.findViewById(R.id.tvDosage)
         val tvStock: TextView = itemView.findViewById(R.id.tvStockValue)
+        val tvMealTime: TextView = itemView.findViewById(R.id.tvMealTime)  // Added MealTime
         val scheduleChipGroup: ChipGroup = itemView.findViewById(R.id.chipGroupSchedule)
-        val mealTypeChipGroup: ChipGroup = itemView.findViewById(R.id.chipGroupMealType)
         val ivEdit: ImageView = itemView.findViewById(R.id.ivEdit)
         val ivDelete: ImageView = itemView.findViewById(R.id.ivDelete)
     }
@@ -36,7 +36,8 @@ class MedicineAdapter(
 
         holder.tvMedicineName.text = medicine.name
         holder.tvDosage.text = medicine.type
-        holder.tvStock.text = "Stock: ${medicine.quantity} tablets"
+        holder.tvStock.text = "Stock: ${medicine.quantity}"
+        holder.tvMealTime.text = "Meal Time: ${medicine.mealTime}" // Displaying MealTime
 
         // Populate Schedule ChipGroup
         holder.scheduleChipGroup.removeAllViews()
@@ -47,16 +48,7 @@ class MedicineAdapter(
             holder.scheduleChipGroup.addView(chip)
         }
 
-        // Populate Meal Type ChipGroup
-        holder.mealTypeChipGroup.removeAllViews()
-        if (medicine.mealType.isNotEmpty()) {
-            val mealChip = Chip(holder.mealTypeChipGroup.context)
-            mealChip.text = medicine.mealType // Displays "Before Meal" or "After Meal"
-            mealChip.isCheckable = false
-            holder.mealTypeChipGroup.addView(mealChip)
-        }
-
-        // Handle edit and delete button clicks
+        // Edit and Delete Button Click Listeners
         holder.ivEdit.setOnClickListener { onEditClick(medicine) }
         holder.ivDelete.setOnClickListener { onDeleteClick(medicine) }
     }

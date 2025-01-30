@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -99,23 +100,25 @@ class MedicalStockActivity : AppCompatActivity() {
             })
     }
 
-
     private fun deleteMedicine(medicine: Medicine) {
         val userPhone = DEFAULT_PHONE
-        val medicineId = medicine.id  // Ensure this is a unique ID for each medicine
+        val medicineId = medicine.id // This ID is the Firebase generated unique key
 
-        if (medicineId.isEmpty()) {
+        if (medicineId.isNullOrEmpty()) {
             Toast.makeText(this, "Invalid medicine ID", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Firebase reference using the unique ID
-        database.child("users")
-            .child(userPhone)
+        // Firebase reference to delete the medicine
+        val medicineRef = database.child("users")
+            .child(userPhone!!)
             .child("medicines")
             .child(medicineId)  // Use the unique 'id' as the key
-            .removeValue()
+
+        medicineRef.removeValue()
             .addOnSuccessListener {
+                // After successfully deleting the medicine, remove the associated task
+                deleteTask(medicineId)  // Call deleteTask with the medicineId
                 Toast.makeText(this, "Medicine deleted", Toast.LENGTH_SHORT).show()
 
                 // Remove the medicine from the local list and notify the adapter
@@ -126,4 +129,40 @@ class MedicalStockActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to delete medicine", Toast.LENGTH_SHORT).show()
             }
     }
+
+    // Function to delete the task associated with the medicine
+    private fun deleteTask(medicineId: String) {
+        val userPhone = DEFAULT_PHONE
+
+        if (medicineId.isNullOrEmpty()) {
+            Toast.makeText(this, "Invalid medicine ID", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Firebase reference to the tasks
+        val taskRef = FirebaseDatabase.getInstance().getReference("users")
+            .child(userPhone!!)
+            .child("tasks")
+
+        // Query to find and delete the task associated with the medicine
+        taskRef.orderByChild("medicineId").equalTo(medicineId)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    // Loop through the snapshot to get all tasks with this medicineId
+                    for (taskSnapshot in snapshot.children) {
+                        // Deleting the task by reference
+                        taskSnapshot.ref.removeValue()
+                    }
+                    Toast.makeText(this, "Task deleted successfully", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "No associated task found", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to delete task: ${e.message}", Toast.LENGTH_SHORT).show()
+                e.message?.let { Log.e("Here", it) }
+            }
+    }
 }
+

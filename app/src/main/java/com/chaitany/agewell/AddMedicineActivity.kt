@@ -1,5 +1,7 @@
 package com.chaitany.agewell
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -9,17 +11,30 @@ import com.google.firebase.database.FirebaseDatabase
 
 class AddMedicineActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddMedicineBinding
-    private val DEFAULT_PHONE = "9322067937"  // Your default phone number
+    private var DEFAULT_PHONE: String? = null  // Store user's phone number
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()  // Enable edge-to-edge feature for full-screen display
+        enableEdgeToEdge()
+
+        // Initialize SharedPreferences
+        val sharedPreferences: SharedPreferences = getSharedPreferences("UserLogin", Context.MODE_PRIVATE)
+        DEFAULT_PHONE = sharedPreferences.getString("mobile", null)
+
+        // Check if mobile number is retrieved
+        if (DEFAULT_PHONE.isNullOrEmpty()) {
+            Toast.makeText(this, "User phone number not found", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        // Inflate UI
         binding = ActivityAddMedicineBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Handle back button click
         binding.btnBack.setOnClickListener {
-            onBackPressed()  // Navigate back when the back button is pressed
+            onBackPressed()  // Navigate back
         }
 
         // Add Medicine button click listener
@@ -40,7 +55,7 @@ class AddMedicineActivity : AppCompatActivity() {
             return
         }
 
-        // Validate quantity is a number
+        // Validate quantity
         val quantity = quantityString.toIntOrNull()
         if (quantity == null || quantity <= 0) {
             Toast.makeText(this, "Please enter a valid quantity", Toast.LENGTH_SHORT).show()
@@ -59,16 +74,17 @@ class AddMedicineActivity : AppCompatActivity() {
         }
 
         // Generate a unique ID for the medicine
-        val medicineRef = FirebaseDatabase.getInstance().getReference("users")
-            .child(DEFAULT_PHONE)
+        val medicineRef = FirebaseDatabase.getInstance()
+            .getReference("users")
+            .child(DEFAULT_PHONE!!)  // Use phone number as user ID
             .child("medicines")
-            .push()  // Firebase generates a unique ID
+            .push()
 
-        val medicineId = medicineRef.key  // Get the generated key
+        val medicineId = medicineRef.key  // Firebase generates a unique key
 
         // Create medicine data with the generated ID
         val medicineData = hashMapOf(
-            "id" to medicineId,  // Add the ID to the data
+            "id" to medicineId,
             "name" to name,
             "type" to type,
             "quantity" to quantity,
@@ -87,9 +103,7 @@ class AddMedicineActivity : AppCompatActivity() {
             }
     }
 
-    // Optional: Override the back button to add custom logic (if needed)
     override fun onBackPressed() {
         super.onBackPressed()
-        // You can add any extra functionality if needed when back is pressed
     }
 }

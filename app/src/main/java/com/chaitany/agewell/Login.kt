@@ -34,6 +34,9 @@ class Login : AppCompatActivity() {
 
         // Check if the user is already logged in
         if (sharedPreferences.getBoolean("isLoggedIn", false)) {
+            // User is already logged in, navigate to Home activity
+            startActivity(Intent(this, Dashboard::class.java))
+            finish()
 
         }
 
@@ -65,11 +68,14 @@ class Login : AppCompatActivity() {
                         // Store login state in SharedPreferences
                         sharedPreferences.edit().apply {
                             putBoolean("isLoggedIn", true)
+                            putString("mobile",mobileNumber)
                             apply()
                         }
 
                         // Display success message and navigate to Home
                         Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this,Dashboard::class.java))
+                        finish()
 
                     }.addOnFailureListener { e ->
                         Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()

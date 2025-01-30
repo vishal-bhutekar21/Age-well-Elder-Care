@@ -6,6 +6,9 @@
         android:name="android.hardware.telephony"
         android:required="false" />
 
+   <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
@@ -18,28 +21,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AgeWell"
         tools:targetApi="31">
-        <activity android:name=".ActivityAppointment"
-            android:exported="false"
-            />
+        <activity
+            android:name=".EmergencyContact"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityAppointment"
+            android:exported="false" />
         <activity
             android:name=".AddMedicineActivity"
             android:exported="false" />
         <activity
             android:name=".MedicalStockActivity"
             android:exported="false" />
-<activity android:name=".Dashboard"
-
-    android:exported="true">
-
-</activity>
-
+        <activity
+            android:name=".Dashboard"
+            android:exported="true"></activity>
         <activity
             android:name=".Emergency_Contacts"
             android:exported="false" />
-
         <activity
             android:name=".Login"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

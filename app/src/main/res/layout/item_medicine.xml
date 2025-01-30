@@ -96,4 +96,40 @@
         app:singleSelection="false"
         app:chipSpacingHorizontal="8dp"
         app:chipSpacingVertical="4dp"/>
+
+    <!-- Meal Type Label -->
+    <TextView
+        android:id="@+id/tvMealType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Meal Type"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="12dp"/>
+
+    <!-- Meal Type Chips -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupMealType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:singleSelection="true"
+        app:chipSpacingHorizontal="8dp"
+        app:chipSpacingVertical="4dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipBeforeMeal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Before Meal"
+         />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipAfterMeal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="After Meal"
+       />
+    </com.google.android.material.chip.ChipGroup>
+
 </LinearLayout>

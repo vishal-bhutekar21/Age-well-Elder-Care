@@ -74,7 +74,7 @@ class MedicalStockActivity : AppCompatActivity() {
             return
         }
 
-        progressDialog.show()  // Show the progress dialog while loading
+        progressDialog.show()  // Show loading
 
         database.child("users")
             .child(userPhone)
@@ -87,17 +87,18 @@ class MedicalStockActivity : AppCompatActivity() {
                         medicine?.let { medicines.add(it) }
                     }
                     adapter.notifyDataSetChanged()
-                    progressDialog.dismiss()  // Dismiss the progress dialog when data is loaded
+                    progressDialog.dismiss()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     Toast.makeText(this@MedicalStockActivity,
                         "Error loading medicines: ${error.message}",
                         Toast.LENGTH_SHORT).show()
-                    progressDialog.dismiss()  // Dismiss the progress dialog on error
+                    progressDialog.dismiss()
                 }
             })
     }
+
 
     private fun deleteMedicine(medicine: Medicine) {
         val userPhone = DEFAULT_PHONE

@@ -63,7 +63,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         // Handle Button Clicks
         layoutEmergencyContact.setOnClickListener(v -> {
-            Intent intent = new Intent(Dashboard.this, ActivityAppointment.class);
+            Intent intent = new Intent(Dashboard.this, Emergency_Contacts.class);
             startActivity(intent);
         });
 
@@ -73,7 +73,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         });
 
         layoutHealthMonitor.setOnClickListener(v -> {
-            Intent intent = new Intent(Dashboard.this, MedicalStockActivity.class);
+            Intent intent = new Intent(Dashboard.this, ActivityAppointment.class);
             startActivity(intent);
         });
 

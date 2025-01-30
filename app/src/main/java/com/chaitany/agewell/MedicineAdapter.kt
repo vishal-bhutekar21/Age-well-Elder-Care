@@ -20,6 +20,7 @@ class MedicineAdapter(
         val tvDosage: TextView = itemView.findViewById(R.id.tvDosage)
         val tvStock: TextView = itemView.findViewById(R.id.tvStockValue)
         val scheduleChipGroup: ChipGroup = itemView.findViewById(R.id.chipGroupSchedule)
+        val mealTypeChipGroup: ChipGroup = itemView.findViewById(R.id.chipGroupMealType)
         val ivEdit: ImageView = itemView.findViewById(R.id.ivEdit)
         val ivDelete: ImageView = itemView.findViewById(R.id.ivDelete)
     }
@@ -33,17 +34,26 @@ class MedicineAdapter(
     override fun onBindViewHolder(holder: MedicineViewHolder, position: Int) {
         val medicine = medicines[position]
 
-        holder.tvMedicineName.text = "${medicine.name} (${medicine.type})"
+        holder.tvMedicineName.text = medicine.name
         holder.tvDosage.text = medicine.type
         holder.tvStock.text = "Stock: ${medicine.quantity} tablets"
 
-        // Clear previous views before adding new ones
+        // Populate Schedule ChipGroup
         holder.scheduleChipGroup.removeAllViews()
         medicine.schedule.forEach { scheduleTime ->
             val chip = Chip(holder.scheduleChipGroup.context)
             chip.text = scheduleTime
             chip.isCheckable = false
             holder.scheduleChipGroup.addView(chip)
+        }
+
+        // Populate Meal Type ChipGroup
+        holder.mealTypeChipGroup.removeAllViews()
+        if (medicine.mealType.isNotEmpty()) {
+            val mealChip = Chip(holder.mealTypeChipGroup.context)
+            mealChip.text = medicine.mealType // Displays "Before Meal" or "After Meal"
+            mealChip.isCheckable = false
+            holder.mealTypeChipGroup.addView(mealChip)
         }
 
         // Handle edit and delete button clicks

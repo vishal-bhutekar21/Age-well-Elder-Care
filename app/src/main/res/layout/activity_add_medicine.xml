@@ -7,7 +7,7 @@
     android:padding="16dp"
     tools:context=".AddMedicineActivity">
 
-    <!-- Back Button (ImageButton) -->
+    <!-- Back Button -->
     <ImageButton
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
@@ -33,27 +33,23 @@
         android:layout_marginStart="48dp"
         android:layout_marginTop="12dp"/>
 
-    <!-- Medicine Name TextInputLayout -->
+    <!-- Medicine Name -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilMedicineName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Medicine Name"
         app:layout_constraintTop_toBottomOf="@id/tvAddMedicine"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:boxStrokeColor="@color/primary">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etMedicineName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:focusableInTouchMode="true"
-            android:focusable="true" />
+            android:inputType="text"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Medicine Type TextInputLayout -->
+    <!-- Medicine Type -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilMedicineType"
         android:layout_width="match_parent"
@@ -70,7 +66,7 @@
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Quantity TextInputLayout -->
+    <!-- Quantity -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilQuantity"
         android:layout_width="match_parent"
@@ -94,34 +90,52 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/tilQuantity"
-        app:singleSelection="true">
+        app:singleSelection="false">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipMorning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Morning"
-            android:checkable="true"
-            app:chipStrokeColor="@color/primary"
-            />
+            android:checkable="true"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipAfternoon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Afternoon"
-            android:checkable="true"
-            app:chipStrokeColor="@color/primary"
-            />
+            android:checkable="true"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipNight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Night"
-            android:checkable="true"
-            app:chipStrokeColor="@color/primary"
-          />
+            android:checkable="true"/>
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Meal Time Selection -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/mealTimeChipGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/scheduleChipGroup"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipBeforeLunch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Before Lunch"
+            android:checkable="true"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipAfterLunch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="After Lunch"
+            android:checkable="true"/>
     </com.google.android.material.chip.ChipGroup>
 
     <!-- Add Medicine Button -->
@@ -132,6 +146,6 @@
         android:layout_marginTop="24dp"
         android:text="Add Medicine"
         android:backgroundTint="@color/primary"
-        app:layout_constraintTop_toBottomOf="@id/scheduleChipGroup" />
+        app:layout_constraintTop_toBottomOf="@id/mealTimeChipGroup"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,5 +6,6 @@ data class Medicine(
     val type: String = "",
     val quantity: Int = 0,
     val schedule: List<String> = listOf(),
+    val mealType: String = "",  // Added meal type field
     val userPhone: String = ""  // Changed from userId to userPhone
 )

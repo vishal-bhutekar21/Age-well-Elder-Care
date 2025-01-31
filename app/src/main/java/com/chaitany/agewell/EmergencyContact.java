@@ -1,9 +1,14 @@
 package com.chaitany.agewell;
 
+import static com.google.android.gms.common.util.CollectionUtils.mapOf;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.Priority;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,9 +17,11 @@ import android.location.Location;
 import android.location.LocationManager;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -41,13 +48,17 @@ import com.google.android.gms.location.Priority;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -178,6 +189,8 @@ public class EmergencyContact extends AppCompatActivity implements ContactsAdapt
         saveContacts();
         adapter.updateContacts(contacts);
         showToast("Contact added successfully");
+
+        addEmergencyContactToFirebase(this,name,phone,category,priority);
     }
 
     private void updateContact(Contact contact, String name, String phone,
@@ -204,6 +217,8 @@ public class EmergencyContact extends AppCompatActivity implements ContactsAdapt
     }
 
     public void sendLiveLocationToContacts() {
+
+       requestPermissions(this);
         if (!checkLocationPermission()) {
             showToast("Location permission not granted");
             return;
@@ -304,6 +319,7 @@ public class EmergencyContact extends AppCompatActivity implements ContactsAdapt
                 .setMessage("Are you sure you want to delete this contact?")
                 .setPositiveButton("Delete", (dialog, which) -> {
                     contacts.remove(contact);
+                    removeEmergencyContactFromFirebase(this,contact.getPhone());
                     saveContacts();
                     adapter.updateContacts(contacts);
                     showToast("Contact deleted");
@@ -385,4 +401,93 @@ public class EmergencyContact extends AppCompatActivity implements ContactsAdapt
         }
         return true;
     }
+
+    public void requestPermissions(Activity activity) {
+        List<String> permissionsToRequest = new ArrayList<>();
+
+        // Check and add location permissions
+        if (ContextCompat.checkSelfPermission(activity,android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (ContextCompat.checkSelfPermission(activity,android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(android.Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+
+        // Check and add SEND_SMS permission
+        if (ContextCompat.checkSelfPermission(activity,android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(android.Manifest.permission.SEND_SMS);
+        }
+
+        // Request only the permissions that are not granted
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(activity, permissionsToRequest.toArray(new String[0]), 102);
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 102) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("Permissions", permissions[i] + " granted");
+                } else {
+                    Log.d("Permissions", permissions[i] + " denied");
+                }
+            }
+        }
+    }
+
+
+    public void addEmergencyContactToFirebase(Context context, String contactName, String contactMobile, String category, Integer priority) {
+        SharedPreferences prefs = context.getSharedPreferences("UserLogin", Context.MODE_PRIVATE);
+        String userMobile = prefs.getString("mobile", null); // Fetch stored user mobile number
+
+        if (userMobile == null) {
+            Log.e("Firebase", "User mobile number not found in SharedPreferences.");
+            return;
+        }
+
+        DatabaseReference database = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(userMobile)
+                .child("emergency_contacts")
+                .child(contactMobile);  // Using contact's mobile number as key
+
+        Map<String, Object> contactMap = new HashMap<>();
+        contactMap.put("name", contactName);
+        contactMap.put("mobile", contactMobile);
+        contactMap.put("category", category);
+        contactMap.put("priority", priority);
+
+        database.setValue(contactMap)
+                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Contact added successfully!"))
+                .addOnFailureListener(e -> Log.e("Firebase", "Failed to add contact", e));
+    }
+
+    public void removeEmergencyContactFromFirebase(Context context, String contactMobile) {
+        SharedPreferences prefs = context.getSharedPreferences("UserLogin", Context.MODE_PRIVATE);
+        String userMobile = prefs.getString("mobile", null);
+
+        if (userMobile == null) {
+            Log.e("Firebase", "User mobile number not found in SharedPreferences.");
+            return;
+        }
+
+        DatabaseReference database = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(userMobile)
+                .child("emergency_contacts")
+                .child(contactMobile);  // Removing using contact's mobile number
+
+        database.removeValue()
+                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Contact removed successfully!"))
+                .addOnFailureListener(e -> Log.e("Firebase", "Failed to remove contact", e));
+    }
+
+
+
+
 }

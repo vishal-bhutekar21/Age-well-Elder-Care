@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Gradient for a modern look -->
+    <gradient
+        android:angle="45"
+        android:startColor="#9880FFF3"
+        android:endColor="#6A67CE"
+        android:type="linear" />
+
+    <!-- Corner radius for smooth rounded edges -->
+    <corners android:radius="12dp" />
+
+    <!-- Stroke (Border) -->
+    <stroke
+        android:width="2dp"
+        android:color="@color/black" />
+
+    <!-- Padding for better spacing -->
+    <padding
+        android:left="8dp"
+        android:right="8dp"
+        android:top="4dp"
+        android:bottom="4dp"/>
+
+</shape>

@@ -6,9 +6,9 @@
         android:name="android.hardware.telephony"
         android:required="false" />
 
-   <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
@@ -21,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AgeWell"
         tools:targetApi="31">
+        <activity
+            android:name=".MealPlanner"
+            android:exported="false" />
         <activity
             android:name=".EmergencyContact"
             android:exported="false" />
@@ -35,7 +38,7 @@
             android:exported="false" />
         <activity
             android:name=".Dashboard"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Emergency_Contacts"
             android:exported="false" />

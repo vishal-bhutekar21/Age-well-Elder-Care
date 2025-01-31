@@ -21,7 +21,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
-    private LinearLayout layoutEmergencyContact, layoutMedicalStock, layoutHealthMonitor;
+    private LinearLayout layoutEmergencyContact, layoutMedicalStock, layoutHealthMonitor,layoutmealplan;
     private Button btnLogout;
     private ImageButton menuButton;
 
@@ -44,6 +44,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         layoutEmergencyContact = findViewById(R.id.layout_emergency_contact);
         layoutMedicalStock = findViewById(R.id.layout_medical_stock);
         layoutHealthMonitor = findViewById(R.id.layout_health_monitor);
+        layoutmealplan=findViewById(R.id.mealplans);
 
 
         // Setup Navigation Drawer
@@ -71,6 +72,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         layoutHealthMonitor.setOnClickListener(v -> {
             Intent intent = new Intent(Dashboard.this, ActivityAppointment.class);
+            startActivity(intent);
+        });
+        layoutmealplan.setOnClickListener(v -> {
+            Intent intent = new Intent(Dashboard.this, MealPlanner.class);
             startActivity(intent);
         });
 

@@ -57,32 +57,49 @@ class Login : AppCompatActivity() {
                         .getReference("users")
                         .child(mobileNumber)
 
-                    // Create user data in Realtime Database
-                    val userData = mapOf(
-                        "name" to "",
-                        "email" to "",
-                        "phone" to mobileNumber
-                    )
+                    // Check if the user already exists
+                    userRef.get().addOnSuccessListener { dataSnapshot ->
+                        if (dataSnapshot.exists()) {
+                            // User already exists, just log in
+                            Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
 
-                    userRef.setValue(userData).addOnSuccessListener {
-                        // Store login state in SharedPreferences
-                        sharedPreferences.edit().apply {
-                            putBoolean("isLoggedIn", true)
-                            putString("mobile",mobileNumber)
-                            apply()
+                            // Store login state in SharedPreferences
+                            sharedPreferences.edit().apply {
+                                putBoolean("isLoggedIn", true)
+                                putString("mobile", mobileNumber)
+                                apply()
+                            }
+
+                            // Navigate to Dashboard
+                            startActivity(Intent(this, Dashboard::class.java))
+                            finish()
+                        } else {
+                            // User does not exist, create new user data
+                            val userData = mapOf(
+                                "name" to "",
+                                "email" to "",
+                                "phone" to mobileNumber
+                            )
+
+                            userRef.setValue(userData).addOnSuccessListener {
+                                // Store login state in SharedPreferences
+                                sharedPreferences.edit().apply {
+                                    putBoolean("isLoggedIn", true)
+                                    putString("mobile", mobileNumber)
+                                    apply()
+                                }
+
+                                // Display success message and navigate to Home
+                                Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this, Dashboard::class.java))
+                                finish()
+                            }.addOnFailureListener { e ->
+                                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
                         }
-
-                        // Display success message and navigate to Home
-                        Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this,Dashboard::class.java))
-                        finish()
-
-                    }.addOnFailureListener { e ->
-                        Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this, "Please enter a valid mobile number", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(this, "Please enter a valid mobile number", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(this, "Please Verify Otp", Toast.LENGTH_SHORT).show()
@@ -90,7 +107,8 @@ class Login : AppCompatActivity() {
         }
 
 
-    // Function to navigate to Home activity
+
+        // Function to navigate to Home activity
 
 
 

@@ -13,7 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+           android:background="@color/primary"
             app:title="Emergency Contacts"
             app:titleTextColor="@color/white"/>
 
@@ -59,6 +59,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Send Live Location"
                 app:icon="@drawable/ic_location"
+                android:backgroundTint="@color/primary"
                 style="@style/Widget.MaterialComponents.Button"/>
 
             <com.google.android.material.button.MaterialButton
@@ -66,6 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:text="Emergency Call"
+                android:backgroundTint="@color/primary"
                 app:icon="@drawable/call_vector"
                 style="@style/Widget.MaterialComponents.Button"/>
 
@@ -78,6 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+      android:background="@color/white"
         android:src="@drawable/ic_add"
         app:layout_anchor="@id/contactsRecyclerView"
         app:layout_anchorGravity="bottom|end"/>

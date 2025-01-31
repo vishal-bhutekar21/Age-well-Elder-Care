@@ -5,9 +5,6 @@ package com.chaitany.agewell;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.Priority;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,54 +12,46 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 
-
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.Settings;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-
 import android.widget.Toast;
 import androidx.appcompat.widget.SearchView;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class EmergencyContact extends AppCompatActivity implements ContactsAdapter.ContactActionListener {
+
     private RecyclerView contactsRecyclerView;
     private ContactsAdapter adapter;
     private List<Contact> contacts = new ArrayList<>();
@@ -71,14 +60,93 @@ public class EmergencyContact extends AppCompatActivity implements ContactsAdapt
     private MaterialButton emergencyCallButton;
     private FloatingActionButton addContactFab;
 
+    private DatabaseReference databaseRef;
+    private String userMobile;
+    private Context context;
+    private FusedLocationProviderClient fusedLocationClient;
+    private DatabaseReference contactsRef;
+    private LocationCallback locationCallback;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency_contact);
+        context=this;
+        addContactFab=findViewById(R.id.addContactFab);
+        sendLocationButton=findViewById(R.id.sendLocationButton);
+        emergencyCallButton=findViewById(R.id.emergencyCallButton);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+       addContactFab.setOnClickListener(v->showContactDialog(null));
+        sendLocationButton.setOnClickListener(v -> sendCurrentLocationToContacts());
+
+        // Initialize Firebase reference
+        SharedPreferences prefs = getSharedPreferences("UserLogin", Context.MODE_PRIVATE);
+        userMobile = prefs.getString("mobile", null); // Get the mobile number from SharedPreferences
+        if (userMobile != null) {
+            // Initialize the Firebase reference for the current user's emergency contacts
+            databaseRef = FirebaseDatabase.getInstance()
+                    .getReference("users")                // Root node where users are stored
+                    .child(userMobile)                    // Child node with the user's mobile number as key
+                    .child("emergency_contacts");         // Child node for emergency contacts
+        } else {
+            // Handle the case when userMobile is null (e.g., user not logged in)
+            showToast("User not logged in");
+        }
+
+        emergencyCallButton.setOnClickListener(v -> {
+            // Check if the emergency contacts exist in the database
+            databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    // Check if no contacts exist
+                    if (!snapshot.exists()) {
+                        showToast("No emergency contacts found!");
+                        return;
+                    }
+
+                    boolean foundHighPriority = false;
+                    String highPriorityPhoneNumber = null;
+
+                    // Iterate over the emergency contacts data
+                    for (DataSnapshot contactSnapshot : snapshot.getChildren()) {
+                        String phone = contactSnapshot.child("phone").getValue(String.class);
+                        Boolean highPriority = contactSnapshot.child("highPriority").getValue(Boolean.class);
+
+                        // Check if the contact has high priority
+                        if (highPriority != null && highPriority && phone != null) {
+                            // Store the high-priority phone number
+                            highPriorityPhoneNumber = phone;
+                            foundHighPriority = true;
+                            break; // Stop after finding the first high-priority contact
+                        }
+                    }
+
+                    if (foundHighPriority && highPriorityPhoneNumber != null) {
+                        // Initiate the call to the high-priority phone number
+                        Intent intent = new Intent(Intent.ACTION_CALL);
+                        intent.setData(Uri.parse("tel:" + highPriorityPhoneNumber));
+                        if (ActivityCompat.checkSelfPermission(EmergencyContact.this, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                            startActivity(intent);
+                        } else {
+                            // Request CALL_PHONE permission if not granted
+                            ActivityCompat.requestPermissions(EmergencyContact.this, new String[]{android.Manifest.permission.CALL_PHONE}, 2);
+                        }
+                    } else {
+                        showToast("No high-priority contacts found.");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    showToast("Failed to retrieve contacts: " + error.getMessage());
+                }
+            });
+        });
 
         initializeViews();
         setupRecyclerView();
-        setupSearchView();
         setupButtons();
         loadContacts();
     }
@@ -100,34 +168,8 @@ public class EmergencyContact extends AppCompatActivity implements ContactsAdapt
         contactsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void setupSearchView() {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                filterContacts(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filterContacts(newText);
-                return true;
-            }
-        });
-    }
-
     private void setupButtons() {
-        addContactFab.setOnClickListener(v -> showContactDialog(null));
 
-        sendLocationButton.setOnClickListener(v -> sendLiveLocationToContacts());
-
-        emergencyCallButton.setOnClickListener(v -> {
-            if (!contacts.isEmpty()) {
-                //(contacts.get(0));
-            } else {
-                showToast("No emergency contacts available");
-            }
-        });
     }
 
     private void showContactDialog(Contact contact) {
@@ -178,195 +220,77 @@ public class EmergencyContact extends AppCompatActivity implements ContactsAdapt
     }
 
     private void addContact(String name, String phone, String category, int priority) {
+        // Create a new Contact object
         Contact newContact = new Contact(
-                UUID.randomUUID().toString(),
-                name,
-                phone,
-                category,
-                priority
+                UUID.randomUUID().toString(),  // Unique contact ID
+                name,                          // Name of the contact
+                phone,                         // Phone number of the contact
+                category,                      // Category of the contact (e.g., "family", "friend")
+                priority                       // Priority level (1, 2, 3, etc.)
         );
-        contacts.add(newContact);
-        saveContacts();
-        adapter.updateContacts(contacts);
-        showToast("Contact added successfully");
 
-        addEmergencyContactToFirebase(this,name,phone,category,priority);
+        // Add the new contact to Firebase
+        addEmergencyContactToFirebase(newContact);
     }
 
-    private void updateContact(Contact contact, String name, String phone,
-                               String category, int priority) {
+    private void addEmergencyContactToFirebase(Contact newContact) {
+        if (databaseRef == null) {
+            showToast("Database reference not initialized");
+            return;
+        }
+
+        // Add contact to Firebase
+        String contactId = newContact.getId();
+        databaseRef.child(contactId).setValue(newContact)
+                .addOnSuccessListener(aVoid -> {
+                    showToast("Contact added successfully");
+                    loadContacts(); // Refresh contacts list
+                })
+                .addOnFailureListener(e -> showToast("Failed to add contact"));
+    }
+
+    private void updateContact(Contact contact, String name, String phone, String category, int priority) {
         contact.setName(name);
         contact.setPhone(phone);
         contact.setCategory(category);
         contact.setPriority(priority);
-        saveContacts();
-        adapter.updateContacts(contacts);
-        showToast("Contact updated successfully");
-    }
 
-    private void filterContacts(String query) {
-        List<Contact> filteredList = contacts.stream()
-                .filter(contact ->
-                        contact.getName().toLowerCase().contains(query.toLowerCase()) ||
-                                contact.getPhone().contains(query)
-                )
-                .sorted((a, b) -> a.getPriority() - b.getPriority())
-                .collect(Collectors.toList());
-
-        adapter.updateContacts(filteredList);
-    }
-
-    public void sendLiveLocationToContacts() {
-
-       requestPermissions(this);
-        if (!checkLocationPermission()) {
-            showToast("Location permission not granted");
-            return;
+        if (databaseRef != null) {
+            databaseRef.child(contact.getId()).setValue(contact)
+                    .addOnSuccessListener(aVoid -> showToast("Contact updated successfully"))
+                    .addOnFailureListener(e -> showToast("Failed to update contact"));
         }
-
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        LocationRequest locationRequest = new LocationRequest.Builder(5000) // 5 seconds interval
-                .setPriority(Priority.PRIORITY_HIGH_ACCURACY) // High accuracy priority
-                .setMinUpdateIntervalMillis(2000) // 2 seconds fastest update
-                .setMinUpdateDistanceMeters(10) // Update only if moved 10 meters
-                .build();
-
-        LocationCallback locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) return;
-
-                for (Location location : locationResult.getLocations()) {
-                    String locationUrl = String.format(
-                            "https://www.google.com/maps?q=%f,%f",
-                            location.getLatitude(),
-                            location.getLongitude()
-                    );
-
-                    // Get the first priority contact
-                    Contact firstPriorityContact = getFirstPriorityContact();
-
-                    if (firstPriorityContact != null) {
-                        sendSMSLocationToContact(firstPriorityContact, locationUrl);
-                        showToast("Live location sent to first priority contact");
-                    } else {
-                        showToast("No priority contacts available");
-                    }
-                }
-            }
-        };
-
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-    }
-
-    private Contact getFirstPriorityContact() {
-        // Sort contacts by priority (ascending) and get the first one
-        List<Contact> sortedContacts = contacts.stream()
-                .sorted((a, b) -> Integer.compare(a.getPriority(), b.getPriority()))
-                .collect(Collectors.toList());
-
-        // Return the first priority contact (lowest priority value means highest priority)
-        return sortedContacts.isEmpty() ? null : sortedContacts.get(0);
-    }
-
-    private void sendSMSLocationToContact(Contact contact, String locationUrl) {
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(contact.getPhone(), null, "Emergency! My live location: " + locationUrl, null, null);
-    }
-
-
-
-    private void sendSMSLocationToContacts(String locationUrl) {
-        List<String> emergencyContacts = getEmergencyContacts(); // Implement method to get contacts
-
-        SmsManager smsManager = SmsManager.getDefault();
-        for (String contact : emergencyContacts) {
-            smsManager.sendTextMessage(contact, null, "Emergency! My live location: " + locationUrl, null, null);
-        }
-    }
-
-    // Mock method to retrieve emergency contacts (Replace this with actual contact retrieval logic)
-    private List<String> getEmergencyContacts() {
-        return List.of("+919876543210", "+918765432109"); // Example contacts
-    }
-
-    private boolean checkLocationPermission() {
-        return ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED;
-    }
-
-
-
-
-
-    @Override
-    public void onCallClick(Contact contact) {
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + contact.getPhone()));
-        startActivity(intent);
-    }
-
-    @Override
-    public void onEditClick(Contact contact) {
-        showContactDialog(contact);
-    }
-
-    @Override
-    public void onDeleteClick(Contact contact) {
-        new AlertDialog.Builder(this)
-                .setTitle("Delete Contact")
-                .setMessage("Are you sure you want to delete this contact?")
-                .setPositiveButton("Delete", (dialog, which) -> {
-                    contacts.remove(contact);
-                    removeEmergencyContactFromFirebase(this,contact.getPhone());
-                    saveContacts();
-                    adapter.updateContacts(contacts);
-                    showToast("Contact deleted");
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
     }
 
     private void loadContacts() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        String contactsJson = prefs.getString("contacts", "[]");
-        try {
-            JSONArray jsonArray = new JSONArray(contactsJson);
-            contacts.clear();
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                contacts.add(new Contact(
-                        jsonObject.getString("id"),
-                        jsonObject.getString("name"),
-                        jsonObject.getString("phone"),
-                        jsonObject.getString("category"),
-                        jsonObject.getInt("priority")
-                ));
-            }
-            adapter.updateContacts(contacts);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+        if (databaseRef == null) return;
 
-    private void saveContacts() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        JSONArray jsonArray = new JSONArray();
-        for (Contact contact : contacts) {
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id", contact.getId());
-                jsonObject.put("name", contact.getName());
-                jsonObject.put("phone", contact.getPhone());
-                jsonObject.put("category", contact.getCategory());
-                jsonObject.put("priority", contact.getPriority());
-                jsonArray.put(jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
+        // Listen for changes to the contacts data in Firebase
+        databaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                contacts.clear(); // Clear the current list of contacts
+
+                // Iterate through each child in the Firebase snapshot
+                for (DataSnapshot contactSnapshot : snapshot.getChildren()) {
+                    // Get the Contact object from the snapshot
+                    Contact contact = contactSnapshot.getValue(Contact.class);
+                    if (contact != null) {
+                        contacts.add(contact); // Add the contact to the list
+                    }
+                }
+
+                // Notify the adapter that the data has been updated
+                adapter.updateContacts(contacts);
             }
-        }
-        prefs.edit().putString("contacts", jsonArray.toString()).apply();
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle any errors that occur while loading data
+                Log.e("Firebase", "Failed to load contacts: " + error.getMessage());
+                showToast("Failed to load contacts");
+            }
+        });
     }
 
     private void showToast(String message) {
@@ -385,109 +309,224 @@ public class EmergencyContact extends AppCompatActivity implements ContactsAdapt
     private int getPriorityValue(String priorityText) {
         switch (priorityText) {
             case "High Priority": return 1;
+            case "Medium Priority": return 2;
             case "Low Priority": return 3;
             default: return 2;
         }
     }
 
     private boolean validateInput(String name, String phone) {
-        if (name.trim().isEmpty()) {
-            showToast("Name is required");
-            return false;
-        }
-        if (!phone.matches("\\d{10}")) {
-            showToast("Please enter a valid 10-digit phone number");
+        if (name.isEmpty() || phone.isEmpty()) {
+            showToast("Name and phone are required");
             return false;
         }
         return true;
     }
 
-    public void requestPermissions(Activity activity) {
-        List<String> permissionsToRequest = new ArrayList<>();
 
-        // Check and add location permissions
-        if (ContextCompat.checkSelfPermission(activity,android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionsToRequest.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(activity,android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionsToRequest.add(android.Manifest.permission.ACCESS_COARSE_LOCATION);
+    @Override
+    public void onCallClick(Contact contact) {
+        if (contact == null || contact.getPhone() == null || contact.getPhone().isEmpty()) {
+            Toast.makeText(context, "Invalid Contact Number", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        // Check and add SEND_SMS permission
-        if (ContextCompat.checkSelfPermission(activity,android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            permissionsToRequest.add(android.Manifest.permission.SEND_SMS);
+        String phoneNumber = contact.getPhone();
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + phoneNumber));
+
+        // Check if permission is granted
+        if (ActivityCompat.checkSelfPermission(context,android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            // Ensure context is an Activity before requesting permissions
+            if (context instanceof Activity) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{android.Manifest.permission.CALL_PHONE}, 1);
+            } else {
+                Toast.makeText(context, "Permission required to make calls!", Toast.LENGTH_SHORT).show();
+            }
+            return;
         }
 
-        // Request only the permissions that are not granted
-        if (!permissionsToRequest.isEmpty()) {
-            ActivityCompat.requestPermissions(activity, permissionsToRequest.toArray(new String[0]), 102);
-        }
+        // Start call (No need for FLAG_ACTIVITY_NEW_TASK since context is now properly handled)
+        context.startActivity(callIntent);
     }
 
 
+
+
+    @Override
+    public void onCallClick(Context context, Contact contact) {
+        if (contact == null || contact.getPhone() == null || contact.getPhone().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Invalid Contact Number", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String phoneNumber = contact.getPhone();
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + phoneNumber));
+
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(),android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getApplicationContext(), "Permission not granted!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        getApplicationContext().startActivity(callIntent);
+    }
+
+    @Override
+    public void onEditClick(Contact contact) {
+        showContactDialog(contact); // Open the edit contact dialog
+    }
+
+    @Override
+    public void onDeleteClick(Contact contact) {
+        deleteContact(contact); // Delete the contact
+    }
+
+    private void deleteContact(Contact contact) {
+        // Ensure the context is an AppCompat context
+        new androidx.appcompat.app.AlertDialog.Builder(this) // Use 'this' to pass the Activity context
+                .setTitle("Delete Contact")
+                .setMessage("Are you sure you want to delete this contact?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    // If Yes, proceed with the deletion
+                    if (databaseRef != null) {
+                        databaseRef.child(contact.getId()).removeValue()
+                                .addOnSuccessListener(aVoid -> showToast("Contact deleted successfully"))
+                                .addOnFailureListener(e -> showToast("Failed to delete contact"));
+                    }
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    // If No, dismiss the dialog and do nothing
+                    dialog.dismiss();
+                })
+                .setCancelable(false) // Optional: prevents dismissing the dialog by tapping outside
+                .show();
+    }
+
+
+
+    private void sendCurrentLocationToContacts() {
+        // Check for location and SMS permissions
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+
+            // Request permissions if not granted
+            ActivityCompat.requestPermissions(this, new String[]{
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.SEND_SMS
+            }, 1);
+            return;
+        }
+
+        // Check if the device's location is enabled
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // If location is disabled, prompt the user to enable it
+            showToast("Location is disabled. Please enable location.");
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+            return;
+        }
+
+        // Check if the device has internet connectivity
+        if (!isInternetAvailable()) {
+            showToast("No internet connection. Please enable it.");
+            return;
+        }
+
+        showToast("Getting current location...");
+
+        // Get the current location
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            String latitude = String.valueOf(location.getLatitude());
+                            String longitude = String.valueOf(location.getLongitude());
+
+                            // Send the location to contacts
+                            sendLocationToContacts(latitude, longitude);
+                        } else {
+                            showToast("Failed to get current location. Try enabling precise location.");
+                        }
+                    }
+                });
+    }
+
+
+    // Helper method to check internet connectivity
+    private boolean isInternetAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    // Callback for permission request
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == 102) {
-            for (int i = 0; i < permissions.length; i++) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("Permissions", permissions[i] + " granted");
-                } else {
-                    Log.d("Permissions", permissions[i] + " denied");
-                }
+        // Check if permissions were granted
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                // Permissions granted, proceed with sending location
+                sendCurrentLocationToContacts();
+            } else {
+                showToast("Permission denied. Cannot send location.");
             }
         }
     }
 
+    // Helper method to check internet connectivity
 
-    public void addEmergencyContactToFirebase(Context context, String contactName, String contactMobile, String category, Integer priority) {
-        SharedPreferences prefs = context.getSharedPreferences("UserLogin", Context.MODE_PRIVATE);
-        String userMobile = prefs.getString("mobile", null); // Fetch stored user mobile number
 
-        if (userMobile == null) {
-            Log.e("Firebase", "User mobile number not found in SharedPreferences.");
-            return;
-        }
+    private void sendLocationToContacts(String latitude, String longitude) {
+        // Fetch emergency contacts from the database
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    showToast("No emergency contacts found!");
+                    return;
+                }
 
-        DatabaseReference database = FirebaseDatabase.getInstance()
-                .getReference("users")
-                .child(userMobile)
-                .child("emergency_contacts")
-                .child(contactMobile);  // Using contact's mobile number as key
+                // Send location via SMS to each contact
+                SmsManager smsManager = SmsManager.getDefault();
+                for (DataSnapshot contactSnapshot : snapshot.getChildren()) {
 
-        Map<String, Object> contactMap = new HashMap<>();
-        contactMap.put("name", contactName);
-        contactMap.put("mobile", contactMobile);
-        contactMap.put("category", category);
-        contactMap.put("priority", priority);
+                    String phoneNumber = contactSnapshot.child("phone").getValue(String.class);
+                    showToast(phoneNumber+"");
+                    if (phoneNumber != null && !phoneNumber.isEmpty()) {
+                        String message = " Emergency! My current location: " +
+                                "https://www.google.com/maps?q=" + latitude + "," + longitude;
+                        smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+                    }
+                }
 
-        database.setValue(contactMap)
-                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Contact added successfully!"))
-                .addOnFailureListener(e -> Log.e("Firebase", "Failed to add contact", e));
+                showToast("Current location sent to emergency contacts.");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                showToast("Failed to retrieve contacts: " + error.getMessage());
+            }
+        });
     }
 
-    public void removeEmergencyContactFromFirebase(Context context, String contactMobile) {
-        SharedPreferences prefs = context.getSharedPreferences("UserLogin", Context.MODE_PRIVATE);
-        String userMobile = prefs.getString("mobile", null);
+    // Callback for permission request
 
-        if (userMobile == null) {
-            Log.e("Firebase", "User mobile number not found in SharedPreferences.");
-            return;
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (fusedLocationClient != null && locationCallback != null) {
+            fusedLocationClient.removeLocationUpdates(locationCallback);
         }
-
-        DatabaseReference database = FirebaseDatabase.getInstance()
-                .getReference("users")
-                .child(userMobile)
-                .child("emergency_contacts")
-                .child(contactMobile);  // Removing using contact's mobile number
-
-        database.removeValue()
-                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Contact removed successfully!"))
-                .addOnFailureListener(e -> Log.e("Firebase", "Failed to remove contact", e));
     }
-
-
 
 
 }

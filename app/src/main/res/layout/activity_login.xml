@@ -1,208 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0FDFA"
     android:orientation="vertical"
-    tools:context=".Login">
+    android:padding="16dp"
+    android:gravity="center"
+    android:background="#F5F5F5">
 
+    <!-- App Logo or Image (Optional) -->
     <ImageView
-        android:layout_width="411dp"
-        android:layout_height="111dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:src="@drawable/app_heading" />
+        android:id="@+id/appLogo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/app_heading"
+        android:contentDescription="App Logo"
+        android:layout_marginBottom="32dp" />
+    <com.google.android.material.textfield.TextInputLayout
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Please Enter valid details to continiue.."
-        android:textAlignment="center" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_marginTop="50dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Mobile Number"
-            android:textAlignment="center"
-
-            />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_shape"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:padding="5dp"
-                android:src="@drawable/call_vector" />
-
-            <EditText
-                android:id="@+id/et_mobile_number"
-                android:layout_width="327dp"
-                android:layout_height="56dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/empty_shape"
-                android:hint="+91 XXXX XX XXXX"
-                android:inputType="numberDecimal" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Enter Otp"
-            android:textAlignment="center"
-
-            />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/edittext_shape"
-            android:gravity="center_vertical"
-
-            android:orientation="horizontal">
-
-            <ImageView
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:src="@drawable/otp_vector"
-
-                />
-
-            <EditText
-                android:id="@+id/et_otp"
-                android:layout_width="327dp"
-                android:layout_height="56dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/empty_shape"
-                android:hint="Enter 6-digit OTP"
-                android:inputType="numberDecimal" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-
-        android:id="@+id/layout_retry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:orientation="horizontal">
+        android:layout_marginBottom="16dp">
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etMobileNumber"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/retry" />
+            android:hint="Mobile"
+            android:inputType="numberDecimal"
+            android:maxLength="50"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/tv_timer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="Resend Otp:" />
+    <com.google.android.material.textfield.TextInputLayout
 
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:weightSum="2"
-
-        >
-
-        <Button
-            android:id="@+id/btn_send_otp"
-            android:layout_width="165dp"
-            android:layout_height="51dp"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:backgroundTint="#0D9488"
-            android:text="Send OTP" />
-
-        <Button
-            android:id="@+id/btn_verify_otp"
-            android:layout_width="165dp"
-            android:layout_height="51dp"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:backgroundTint="#0D9488"
-            android:text="Verify OTP"
-
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal">
+        android:layout_marginBottom="16dp">
 
-        <CheckBox
-            android:id="@+id/chk_termsAndConditions"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:buttonTint="@color/primary"
-
-
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Accept Terms and Conditions" />
-    </LinearLayout>
-
+            android:hint="Password"
+            android:inputType="textPersonName"
+            android:maxLength="50"/>
+    </com.google.android.material.textfield.TextInputLayout>
     <Button
-        android:id="@+id/btn_login_now"
+        android:id="@+id/btnLoginNow"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_gravity="center"
-        android:layout_margin="20dp"
-        android:backgroundTint="#0D9488"
+        android:layout_height="wrap_content"
         android:text="Login Now"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="@color/primary"
+        android:layout_marginBottom="16dp"
+        android:padding="16dp" />
 
-        />
-
+    <!-- Sign Up Button -->
+    <Button
+        android:id="@+id/btnSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
+        android:textColor="@color/primary"
+        android:backgroundTint="#FFFFFF"
+        android:padding="16dp" />
 
 </LinearLayout>

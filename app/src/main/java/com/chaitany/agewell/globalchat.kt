@@ -4,7 +4,9 @@ import ChatAdapter
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
@@ -25,9 +27,17 @@ class globalchat : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_globalchat)
          userMobile=getUserMobile()
+
+
+
+
         // Initialize Firebase
         database = FirebaseDatabase.getInstance().getReference("chats")
 
+        val backButton: ImageView = findViewById(R.id.btn_back)
+        backButton.setOnClickListener {
+            onBackPressed()  // Navigate back when clicked
+        }
         // Initialize UI
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageEditText = findViewById(R.id.messageEditText)
@@ -74,6 +84,11 @@ class globalchat : AppCompatActivity() {
     private fun getUserMobile(): String {
         val sharedPreferences = getSharedPreferences("UserLogin", MODE_PRIVATE)
         return sharedPreferences.getString("mobile", "") ?: ""  // Default to empty string if not found
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }

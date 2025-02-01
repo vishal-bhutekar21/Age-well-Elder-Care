@@ -254,7 +254,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/emergencycall"
+                    android:src="@drawable/telephone"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />
 
@@ -263,13 +263,17 @@
                     android:layout_height="wrap_content"
                     android:text="Emergency Contacts"
                     android:textStyle="bold"
+                    android:textAlignment="center"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="4dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAlignment="center"
                     android:text="Quick access to help"
+
+
                     android:textColor="#6B7280"
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
@@ -307,6 +311,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Track your medicines"
+                    android:textAlignment="center"
                     android:textColor="#6B7280"
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
@@ -337,6 +342,7 @@
                     android:layout_height="wrap_content"
                     android:text="Checkup Schedule"
                     android:textStyle="bold"
+                    android:textAlignment="center"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="4dp" />
 
@@ -344,6 +350,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Upcoming appointments"
+                    android:textAlignment="center"
                     android:textColor="#6B7280"
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
@@ -417,6 +424,7 @@
             android:layout_marginEnd="8dp">
 
             <LinearLayout
+                android:id="@+id/layout_elder_connect"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
 
@@ -439,7 +447,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Chat with Caretakers"
+                    android:text="ElderConnect "
                     android:textStyle="bold"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="4dp" />

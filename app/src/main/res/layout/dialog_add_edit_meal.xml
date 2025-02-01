@@ -30,7 +30,8 @@
                 android:text="Add/Edit Meal"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                android:textColor="@color/green"
+                android:textColor="@color/primary"
+                android:fontFamily="sans-serif-condensed"
                 android:layout_marginBottom="16dp"/>
             <TextView
             android:id="@+id/tvFixedDay"
@@ -89,10 +90,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Cancel"
+                    android:drawableLeft="@drawable/ic_send"
+                    android:drawableTint="@color/white"
                     android:layout_gravity="start"
-                    android:backgroundTint="@color/gray"
-                    android:textColor="@android:color/black"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="@android:color/white"
                     android:layout_marginEnd="8dp"/>
 
                 <!-- Right-aligned button -->
@@ -100,9 +102,11 @@
                     android:id="@+id/btnSave"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_send"
+                    android:drawableTint="@color/white"
                     android:layout_weight="1"
                     android:layout_gravity="end"
-                    android:backgroundTint="@color/green"
+                   android:backgroundTint="@color/primary"
                     android:text="Save"
                     android:textColor="@android:color/white" />
             </LinearLayout>

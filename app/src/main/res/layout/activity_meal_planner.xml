@@ -8,40 +8,45 @@
     android:padding="16dp">
 
     <!-- Back Button -->
+
+    <!-- Title -->
+
+    <!-- Scrollable Meal Container -->
+
     <Button
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/primary"
+        android:elevation="4dp"
+        android:paddingStart="12dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="8dp"
         android:text="Back"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:backgroundTint="@color/primary"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:elevation="4dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="12dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Title -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif-condensed"
         android:text="Weekly Meal Plan"
+        android:textColor="@color/primary"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="@color/green"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnBack"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="12dp" />
+        app:layout_constraintHorizontal_bias="0.203"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Scrollable Meal Container -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"

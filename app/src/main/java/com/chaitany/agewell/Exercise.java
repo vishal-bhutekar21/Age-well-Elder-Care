@@ -8,7 +8,7 @@ public class Exercise implements Serializable {
     private String level;
     private int sets;
     private int reps;
-    private int restTime; // in seconds
+    private int restTime;
     private String instructions;
     private String safetyTips;
     private String videoUrl;
@@ -16,7 +16,6 @@ public class Exercise implements Serializable {
 
     // Default constructor required for calls to DataSnapshot.getValue(Exercise.class)
     public Exercise() {
-        // Optional: If id is required to be generated here, use a default value
         this.id = System.currentTimeMillis(); // Use current time as a unique ID (example)
     }
 
@@ -129,7 +128,7 @@ public class Exercise implements Serializable {
         this.videoUrl = videoUrl;
     }
 
-    public boolean isCompleted() {
+    public boolean isCompleted() { // Fixed method name
         return isCompleted;
     }
 

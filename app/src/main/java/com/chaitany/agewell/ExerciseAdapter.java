@@ -105,7 +105,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
             startButton.setOnClickListener(v -> {
                 Exercise exercise = exercises.get(getAdapterPosition());
-                startExercise(exercise); // Updated to directly call the start method
+                startExercise(exercise);
             });
 
             watchVideoButton.setOnClickListener(v -> {
@@ -115,8 +115,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
 
         private void startExercise(Exercise exercise) {
-            // Add validation to ensure the exercise data is complete
-            if (exercise.getName() == null || exercise.getSets() == 0 || exercise.getReps() == 0) {
+            // Validate exercise data
+            if (exercise.getName() == null || exercise.getSets() <= 0 || exercise.getReps() <= 0) {
                 Toast.makeText(context, "Invalid exercise data", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -148,9 +148,16 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
 
         private void announceRemainingTime(Exercise exercise) {
-            // Assuming you want to announce the total duration of the exercise
             String message = "Starting exercise: " + exercise.getName();
             textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
+    }
+
+    // Release TextToSpeech resources when no longer needed
+    public void releaseResources() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
         }
     }
 }

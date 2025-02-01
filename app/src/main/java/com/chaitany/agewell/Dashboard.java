@@ -1,11 +1,15 @@
 package com.chaitany.agewell;
 
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -22,6 +26,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+    SharedPreferences sharedPreferences;
+
     private LinearLayout layoutEmergencyContact, layoutMedicalStock, layoutHealthMonitor, layoutmealplan, layout_bmi_index,layout_elder_connect,layout_exercise;
     private ImageView menuButton; // ImageView for opening drawer
 
@@ -31,6 +37,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_dashboard);
 
+        sharedPreferences = getSharedPreferences("UserLogin", Context.MODE_PRIVATE);
         // Handling window insets for a smooth UI
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.miana), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -97,8 +104,50 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         });
     }
 
+
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        return false;
+        Intent intent;
+
+        if (item.getItemId() == R.id.nav_logout) {
+            // Clear login status in SharedPreferences
+            SharedPreferences sharedPreferences = getSharedPreferences("User Login", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isLoggedIn", false);
+            editor.apply();
+                // putString("mobile", null); // Clear mobile number if stored
+
+            // Start the Login activity
+            intent = new Intent(Dashboard.this, Login.class);
+            startActivity(intent);
+            finish(); // Close the current activity
+        } else if (item.getItemId() == R.id.nav_profile) {
+            intent = new Intent(Dashboard.this, ProfileActivity.class);
+            startActivity(intent);
+        } else if (item.getItemId() == R.id.nav_share) {
+            String appLink = "https://play.google.com/store/apps/details?id=com.chaitany.agewell"; // Replace with your app's link
+            String shareMessage = "Check out this amazing app that helps you and your older person to stay healthy and care! \n\n" +
+                    "Download it here: " + appLink + "\n\n" +
+                    "Stay healthy and fit!";
+
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Share Our App");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+            startActivity(Intent.createChooser(shareIntent, "Share via"));
+        } else if (item.getItemId() == R.id.nav_feedback) {
+            intent = new Intent(Dashboard.this, FeedbackActivity.class);
+            startActivity(intent);
+        } else if (item.getItemId() == R.id.nav_about) {
+            intent = new Intent(Dashboard.this, AboutActivity.class);
+            startActivity(intent);
+        } else {
+            return false; // If the item ID does not match any case, return false
+        }
+
+        // Close the navigation drawer
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true; // Indicate that the item selection was handled
     }
 }

@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,14 +26,11 @@ public class MealPlanner extends AppCompatActivity {
     private String userId;
     private SharedPreferences sharedPreferences;
     private DatabaseReference db;
-    private Spinner spinnerDay;
 
     // Declare EditText variables for dialog
-    private TextInputEditText etMeal, etNotes, etWhatToMake, etWhatToAvoid, etCookingTime, etCalories;
-
+    private TextInputEditText etMeal, etNotes;
 
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meal_planner);
@@ -48,7 +43,7 @@ public class MealPlanner extends AppCompatActivity {
 
         userId = sharedPreferences.getString("mobile", null);
         if (userId == null) {
-            Toast.makeText(MealPlanner.this, "User ID not found!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MealPlanner.this, "User  ID not found!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -56,8 +51,6 @@ public class MealPlanner extends AppCompatActivity {
 
         loadMeals();
     }
-
-
 
     private void loadMeals() {
         db.child(userId).child("meals").get().addOnCompleteListener(task -> {
@@ -81,26 +74,23 @@ public class MealPlanner extends AppCompatActivity {
         if (meal != null) {
             View mealView = getLayoutInflater().inflate(R.layout.mealmenu_item, mealContainer, false);
             Spinner spinnerDay = mealView.findViewById(R.id.spinnerDay);
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                    this, R.array.days_of_week, android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerDay.setAdapter(adapter);
+            TextView tvMeal = mealView.findViewById(R.id.tvMeal);
+            TextView tvNotes = mealView.findViewById(R.id.tvNotes);
+            Button btnEdit = mealView.findViewById(R.id.btnEdit);
+            Button btndelete = mealView.findViewById(R.id.btnDelete);
 
-// Set the selected day
+            // Set the selected day
             if (meal.getDay() != null) {
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                        this, R.array.days_of_week, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerDay.setAdapter(adapter);
                 int position = adapter.getPosition(meal.getDay());
                 spinnerDay.setSelection(position);
             }
 
-            TextView tvMeal = mealView.findViewById(R.id.tvMeal);
-            TextView tvNotes = mealView.findViewById(R.id.tvNotes);
-            Button btnEdit = mealView.findViewById(R.id.btnEdit);
-
-
-
-
             // Check if meal properties are null
-            if (meal.getMeal() == null || meal.getNotes() == null ) {
+            if (meal.getMeal() == null || meal.getNotes() == null) {
                 Log.e("MealPlanner", "Meal properties are null");
                 return; // Exit if any property is null
             }
@@ -108,9 +98,21 @@ public class MealPlanner extends AppCompatActivity {
             tvMeal.setText(meal.getMeal());
             tvNotes.setText("Notes: " + meal.getNotes());
 
-
             mealView.setTag(meal.getMeal());
             btnEdit.setOnClickListener(v -> openAddEditMealDialog(mealView));
+
+            // Delete button functionality
+            btndelete.setOnClickListener(v -> {
+                String mealId = meal.getMeal(); // Assuming meal ID is stored in the tag
+                db.child(userId).child("meals").child(mealId).removeValue()
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(MealPlanner.this, "Meal deleted successfully", Toast.LENGTH_SHORT).show();
+                            mealContainer.removeView(mealView); // Remove the meal view from the container
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(MealPlanner.this, "Error deleting meal: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+            });
 
             mealContainer.addView(mealView);
         } else {
@@ -120,6 +122,7 @@ public class MealPlanner extends AppCompatActivity {
 
     private void openAddEditMealDialog(View mealItem) {
         Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_add_edit_meal);
         Window window = dialog.getWindow();
         if (window != null) {
@@ -129,7 +132,6 @@ public class MealPlanner extends AppCompatActivity {
         // Initialize views
         TextView tvDialogTitle = dialog.findViewById(R.id.tvDialogTitle);
         Spinner spinnerDay = dialog.findViewById(R.id.spinnerDay);
-        TextView tvFixedDay = dialog.findViewById(R.id.tvFixedDay); // Add this in your XML
         TextInputEditText etMeal = dialog.findViewById(R.id.etMeal);
         TextInputEditText etNotes = dialog.findViewById(R.id.etNotes);
         Button btnCancel = dialog.findViewById(R.id.btnCancel);
@@ -153,14 +155,11 @@ public class MealPlanner extends AppCompatActivity {
 
             // Get the selected day from the existing meal
             String selectedDay = spinnerMealDay.getSelectedItem().toString();
-            tvFixedDay.setText(selectedDay); // Show the day as TextView
-            tvFixedDay.setVisibility(View.VISIBLE);
-            spinnerDay.setVisibility(View.GONE); // Hide the spinner
+            int position = adapter.getPosition(selectedDay);
+            spinnerDay.setSelection(position);
         } else {
             // Adding a new meal
             tvDialogTitle.setText("Add New Meal");
-            tvFixedDay.setVisibility(View.GONE);
-            spinnerDay.setVisibility(View.VISIBLE);
         }
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
@@ -169,17 +168,17 @@ public class MealPlanner extends AppCompatActivity {
         dialog.show();
     }
 
-
-    private void saveMealData(Dialog dialog, Spinner day ,TextInputEditText etMeal, TextInputEditText etNotes, View mealItem) {
-        String meal = etMeal.getText().toString();
+    private void saveMealData(Dialog dialog, Spinner day, TextInputEditText etMeal, TextInputEditText etNotes, View mealItem) {
+        String meal = etMeal.getText().toString().trim();
         String dayy = day.getSelectedItem().toString();
-        String notes = etNotes.getText().toString();
+        String notes = etNotes.getText().toString().trim();
 
+        if (meal.isEmpty()) {
+            Toast.makeText(MealPlanner.this, "Meal cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-
-
-
-        Meal mealData = new Meal(dayy,meal, notes);
+        Meal mealData = new Meal(dayy, meal, notes);
 
         if (mealItem != null) {
             String mealId = mealItem.getTag().toString();
@@ -200,30 +199,20 @@ public class MealPlanner extends AppCompatActivity {
         }
     }
 
-
-
     // Meal data model class
     public static class Meal {
-
-
-
-        private  String day;
+        private String day;
         private String meal;
         private String notes;
-
-
 
         public Meal() {
             // Default constructor required for calls to DataSnapshot.getValue(Meal.class)
         }
 
-        public Meal(String day,String meal, String notes) {
-            this.day=day;
-
+        public Meal(String day, String meal, String notes) {
+            this.day = day;
             this.meal = meal;
             this.notes = notes;
-
-
         }
 
         // Getters
@@ -234,6 +223,7 @@ public class MealPlanner extends AppCompatActivity {
         public String getNotes() {
             return notes;
         }
+
         public String getDay() {
             return day;
         }
@@ -241,11 +231,5 @@ public class MealPlanner extends AppCompatActivity {
         public void setDay(String day) {
             this.day = day;
         }
-
-
-
-
-
-
     }
 }

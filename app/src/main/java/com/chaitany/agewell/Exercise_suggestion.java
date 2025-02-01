@@ -2,6 +2,7 @@ package com.chaitany.agewell;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -56,9 +57,19 @@ public class Exercise_suggestion extends AppCompatActivity {
 
         // Initialize Firebase Database reference
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        exerciseRef = database.getReference("exercises");
+        String userId = getUserIdFromPreferences(); // Get user ID from SharedPreferences
 
-        loadExercisesFromFirebase(); // Load exercises from Firebase on app launch
+
+        if (userId != null) {
+            exerciseRef = database.getReference("users").child(userId).child("exercises"); // Reference to user's exercises
+            loadExercisesFromFirebase(); // Load exercises from Firebase on app launch
+        } else {
+            Toast.makeText(this, "User  ID not found. Please log in again.", Toast.LENGTH_SHORT).show();
+            // Optionally, redirect to login activity
+            // Intent intent = new Intent(this, LoginActivity.class);
+            // startActivity(intent);
+            // finish(); // Close this activity
+        }
     }
 
     private void initializeViews() {
@@ -111,7 +122,8 @@ public class Exercise_suggestion extends AppCompatActivity {
             }
 
             @Override
-            public void onFinish() {
+            public void onFinish
+                    () {
                 completedExercises++;
                 updateProgress(); // Update progress based on completed exercises
                 showExerciseCompletedDialog(exercise);
@@ -136,8 +148,12 @@ public class Exercise_suggestion extends AppCompatActivity {
 
     public void watchExerciseVideo(Exercise exercise) {
         String videoUrl = exercise.getVideoUrl(); // Get the video URL from the exercise object
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
-        startActivity(intent);
+        if (videoUrl != null && !videoUrl.isEmpty()) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "No video available for this exercise", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showAddExerciseDialog() {
@@ -178,7 +194,7 @@ public class Exercise_suggestion extends AppCompatActivity {
                 exerciseList.add(newExercise);
                 exerciseAdapter.setExercises(exerciseList);
 
-                // Save exercise data to Firebase
+                // Save exercise data to Firebase under the user's exercises
                 String exerciseId = exerciseRef.push().getKey(); // Generate unique ID
                 if (exerciseId != null) {
                     exerciseRef.child(exerciseId).setValue(newExercise); // Store exercise data under exerciseId
@@ -209,13 +225,10 @@ public class Exercise_suggestion extends AppCompatActivity {
     }
 
     private void loadExercisesFromFirebase() {
-        // Code to retrieve exercise data from Firebase
         exerciseRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                // Clear current list
-                exerciseList.clear();
+                exerciseList.clear(); // Clear current list
 
-                // Populate the list with data from Firebase
                 for (DataSnapshot snapshot : task.getResult().getChildren()) {
                     Exercise exercise = snapshot.getValue(Exercise.class);
                     if (exercise != null) {
@@ -228,6 +241,11 @@ public class Exercise_suggestion extends AppCompatActivity {
                 Toast.makeText(this, "Failed to load exercises", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private String getUserIdFromPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserLogin", MODE_PRIVATE);
+        return sharedPreferences .getString("mobile", null); // Use the correct key to retrieve the mobile number
     }
 
     @Override

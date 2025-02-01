@@ -19,12 +19,12 @@ class globalchat : AppCompatActivity() {
     private val chatList = mutableListOf<ChatMessage>()
     private lateinit var messageEditText: EditText
     private lateinit var sendButton: ImageButton
-    private val userMobile = "9322067937"  // Get dynamically from user login
+    private var userMobile = "9322067937"  // Get dynamically from user login
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_globalchat)
-
+         userMobile=getUserMobile()
         // Initialize Firebase
         database = FirebaseDatabase.getInstance().getReference("chats")
 
@@ -71,4 +71,9 @@ class globalchat : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+    private fun getUserMobile(): String {
+        val sharedPreferences = getSharedPreferences("UserLogin", MODE_PRIVATE)
+        return sharedPreferences.getString("mobile", "") ?: ""  // Default to empty string if not found
+    }
+
 }

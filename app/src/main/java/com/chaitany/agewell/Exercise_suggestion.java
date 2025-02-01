@@ -22,6 +22,9 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,7 @@ public class Exercise_suggestion extends AppCompatActivity {
     private TextView timerTextView; // TextView to display remaining time
     private TextToSpeech textToSpeech; // TextToSpeech instance
     private boolean isExerciseInProgress = false; // Track if an exercise is currently in progress
+    private DatabaseReference exerciseRef; // Firebase reference for exercises
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,12 @@ public class Exercise_suggestion extends AppCompatActivity {
         setupRecyclerView();
         exerciseList = new ArrayList<>(); // Initialize the exercise list here
         initializeTextToSpeech(); // Initialize TextToSpeech
+
+        // Initialize Firebase Database reference
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        exerciseRef = database.getReference("exercises");
+
+        loadExercisesFromFirebase(); // Load exercises from Firebase on app launch
     }
 
     private void initializeViews() {
@@ -164,8 +174,16 @@ public class Exercise_suggestion extends AppCompatActivity {
                         videoUrl
                 );
 
+                // Add exercise to the local list and update RecyclerView
                 exerciseList.add(newExercise);
                 exerciseAdapter.setExercises(exerciseList);
+
+                // Save exercise data to Firebase
+                String exerciseId = exerciseRef.push().getKey(); // Generate unique ID
+                if (exerciseId != null) {
+                    exerciseRef.child(exerciseId).setValue(newExercise); // Store exercise data under exerciseId
+                }
+
                 dialog.dismiss();
             } catch (NumberFormatException e) {
                 showError("Please enter valid numbers");
@@ -186,6 +204,28 @@ public class Exercise_suggestion extends AppCompatActivity {
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                     Toast.makeText(this, "Language not supported", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+    }
+
+    private void loadExercisesFromFirebase() {
+        // Code to retrieve exercise data from Firebase
+        exerciseRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Clear current list
+                exerciseList.clear();
+
+                // Populate the list with data from Firebase
+                for (DataSnapshot snapshot : task.getResult().getChildren()) {
+                    Exercise exercise = snapshot.getValue(Exercise.class);
+                    if (exercise != null) {
+                        exerciseList.add(exercise);
+                    }
+                }
+
+                exerciseAdapter.setExercises(exerciseList);
+            } else {
+                Toast.makeText(this, "Failed to load exercises", Toast.LENGTH_SHORT).show();
             }
         });
     }

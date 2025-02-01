@@ -34,57 +34,77 @@
                 android:background="@drawable/empty_shape"
                 android:backgroundTint="@color/white"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="10dp">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="24dp">
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"
 
-                    <LinearLayout
-                        android:id="@+id/text_container"
-                        android:layout_width="wrap_content"
+                    >
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="7dp"
+                        android:layout_marginTop="10dp"
+
+                        android:id="@+id/menubars"
+                        android:src="@drawable/barsstaggered"
+                        />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:orientation="vertical">
+                        android:paddingBottom="24dp">
 
-                        <TextView
+                        <LinearLayout
+                            android:id="@+id/text_container"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Hi, Alex Johnson"
-                            android:textColor="@color/primary"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
+                            android:layout_alignParentStart="true"
+                            android:layout_marginLeft="5dp"
+                            android:orientation="vertical">
 
-                        <TextView
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Hi, Alex Johnson"
+                                android:textColor="@color/primary"
+                                android:textSize="24sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Your career growth platform"
+                                android:textColor="@color/teal_600" />
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Your career growth platform"
-                            android:textColor="@color/teal_600" />
-                    </LinearLayout>
+                            android:layout_alignParentEnd="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="3dp">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="3dp">
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_marginEnd="16dp"
 
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_marginEnd="16dp"
+                                android:backgroundTint="@color/gray_800"
+                                android:src="@drawable/ic_noti" />
 
-                            android:backgroundTint="@color/gray_800"
-                            android:src="@drawable/ic_noti" />
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/img_oldman" />
+                        </LinearLayout>
+                    </RelativeLayout>
 
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@drawable/img_oldman" />
-                    </LinearLayout>
-                </RelativeLayout>
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
@@ -226,7 +246,7 @@
                 android:layout_rowWeight="1"
                 android:orientation="vertical"
                 android:background="@drawable/empty_shape"
-                android:backgroundTint="#88E6FFFA"
+                android:backgroundTint="#16FF0000"
                 android:padding="16dp"
                 android:layout_margin="8dp"
                 >
@@ -234,7 +254,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_emer_call"
+                    android:src="@drawable/emergencycall"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />
 
@@ -262,7 +282,7 @@
                 android:background="@drawable/empty_shape"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:backgroundTint="#FEE2E2"
+                android:backgroundTint="#2A3F51B5"
                 android:padding="16dp"
                 android:layout_margin="8dp"
                >
@@ -270,7 +290,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_medical"
+                    android:src="@drawable/instock"
 
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />
@@ -307,7 +327,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_health"
+                    android:src="@drawable/clipboard"
 
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />
@@ -336,7 +356,7 @@
                 android:layout_rowWeight="1"
                 android:orientation="vertical"
                 android:background="@drawable/empty_shape"
-                android:backgroundTint="#88E6FFFA"
+                android:backgroundTint="#DFE6FFFA"
                 android:padding="16dp"
                 android:layout_margin="8dp"
                 >
@@ -344,7 +364,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_health"
+                    android:src="@drawable/bmi"
 
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />
@@ -406,12 +426,12 @@
                 android:layout_rowWeight="1"
                 android:padding="16dp"
                 android:layout_margin="8dp"
-                android:backgroundTint="#33E6B500">
+                android:backgroundTint="#4D2196F3">
 
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_emergency"
+                    android:src="@drawable/conversation"
 
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />
@@ -419,7 +439,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Medication Reminders"
+                    android:text="Chat with Caretakers"
                     android:textStyle="bold"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="4dp" />
@@ -427,7 +447,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Don't miss your meds"
+                    android:text="read good advices"
                     android:textColor="#6B7280"
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
@@ -440,7 +460,7 @@
                 android:layout_rowWeight="1"
                 android:orientation="vertical"
                 android:background="@drawable/empty_shape"
-                android:backgroundTint="#5F4EDEC4"
+                android:backgroundTint="#2F4CAF50"
                 android:padding="16dp"
                 android:layout_margin="8dp"
                 >
@@ -448,7 +468,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_medical"
+                    android:src="@drawable/exercises"
 
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />
@@ -479,12 +499,12 @@
                 android:layout_rowWeight="1"
                 android:padding="16dp"
                 android:layout_margin="8dp"
-                android:backgroundTint="#5C99D7FB">
+                android:backgroundTint="#79F4C67D">
 
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_health"
+                    android:src="@drawable/meal"
 
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />

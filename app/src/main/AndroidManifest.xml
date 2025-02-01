@@ -40,6 +40,7 @@
             android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".MealPlanner"
+            android:theme="@style/Theme.AgeWellSuper"
             android:exported="false" />
         <activity
             android:name=".EmergencyContact"
@@ -47,18 +48,35 @@
             android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".ActivityAppointment"
+            android:theme="@style/Theme.AgeWellSuper"
             android:exported="false" />
         <activity
             android:name=".AddMedicineActivity"
+            android:theme="@style/Theme.AgeWellSuper"
             android:exported="false" />
         <activity
             android:name=".MedicalStockActivity"
+            android:theme="@style/Theme.AgeWellSuper"
             android:exported="false" />
         <activity
             android:name=".Dashboard"
+            android:theme="@style/Theme.AgeWellSuper"
+            android:exported="true" />
+        <activity
+            android:name=".ProfileActivity"
+            android:theme="@style/Theme.AgeWellSuper"
+            android:exported="true" />
+        <activity
+            android:name=".AboutActivity"
+            android:theme="@style/Theme.AgeWellSuper"
+            android:exported="true" />
+        <activity
+            android:name=".FeedbackActivity"
+            android:theme="@style/Theme.AgeWellSuper"
             android:exported="true" />
         <activity
             android:name=".Exercise_suggestion"
+            android:theme="@style/Theme.AgeWellSuper"
             android:exported="true" />
         <activity
             android:name=".Login"

@@ -112,9 +112,9 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         if (item.getItemId() == R.id.nav_logout) {
             // Clear login status in SharedPreferences
-            SharedPreferences sharedPreferences = getSharedPreferences("User Login", MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getSharedPreferences("UserLogin", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("isLoggedIn", false);
+            editor.putBoolean("isLogged", false);
             editor.apply();
                 // putString("mobile", null); // Clear mobile number if stored
 

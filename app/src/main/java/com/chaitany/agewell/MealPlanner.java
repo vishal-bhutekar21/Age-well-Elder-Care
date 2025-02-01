@@ -40,6 +40,7 @@ public class MealPlanner extends AppCompatActivity {
 
         mealContainer = findViewById(R.id.mealContainer);
         Button btnAddMeal = findViewById(R.id.btnAddMeal);
+        //Button btnRefresh = findViewById(R.id.btnRefresh); // Add a refresh button
 
         userId = sharedPreferences.getString("mobile", null);
         if (userId == null) {
@@ -49,10 +50,12 @@ public class MealPlanner extends AppCompatActivity {
 
         btnAddMeal.setOnClickListener(v -> openAddEditMealDialog(null));
 
-        loadMeals();
+
+        loadMeals(); // Load meals when the activity starts
     }
 
     private void loadMeals() {
+        mealContainer.removeAllViews(); // Clear existing views before loading new data
         db.child(userId).child("meals").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DataSnapshot snapshot = task.getResult();
@@ -115,6 +118,7 @@ public class MealPlanner extends AppCompatActivity {
             });
 
             mealContainer.addView(mealView);
+            loadMeals();
         } else {
             Log.e("MealPlanner", "Meal is null");
         }

@@ -40,7 +40,7 @@ public class MealPlanner extends AppCompatActivity {
 
         mealContainer = findViewById(R.id.mealContainer);
         Button btnAddMeal = findViewById(R.id.btnAddMeal);
-        //Button btnRefresh = findViewById(R.id.btnRefresh); // Add a refresh button
+
 
         userId = sharedPreferences.getString("mobile", null);
         if (userId == null) {
@@ -55,14 +55,17 @@ public class MealPlanner extends AppCompatActivity {
     }
 
     private void loadMeals() {
-        mealContainer.removeAllViews(); // Clear existing views before loading new data
+        mealContainer.removeAllViews();  // Clear existing views before loading new data
         db.child(userId).child("meals").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DataSnapshot snapshot = task.getResult();
-                if (snapshot != null) {
+                if (snapshot.exists()) {  // Check if data exists
                     for (DataSnapshot mealSnapshot : snapshot.getChildren()) {
                         Meal meal = mealSnapshot.getValue(Meal.class);
-                        addMealToContainer(meal);
+                        if (meal != null) {
+                            meal.setMealId(mealSnapshot.getKey());  // Set the meal ID
+                            addMealToContainer(meal);
+                        }
                     }
                 } else {
                     Toast.makeText(MealPlanner.this, "No meals found", Toast.LENGTH_SHORT).show();
@@ -72,6 +75,7 @@ public class MealPlanner extends AppCompatActivity {
             }
         });
     }
+
 
     private void addMealToContainer(Meal meal) {
         if (meal != null) {
@@ -106,19 +110,20 @@ public class MealPlanner extends AppCompatActivity {
 
             // Delete button functionality
             btndelete.setOnClickListener(v -> {
-                String mealId = meal.getMeal(); // Assuming meal ID is stored in the tag
+                String mealId = meal.getMealId();  // Use mealId instead of meal name
                 db.child(userId).child("meals").child(mealId).removeValue()
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(MealPlanner.this, "Meal deleted successfully", Toast.LENGTH_SHORT).show();
-                            mealContainer.removeView(mealView); // Remove the meal view from the container
+                            mealContainer.removeView(mealView);
                         })
                         .addOnFailureListener(e -> {
                             Toast.makeText(MealPlanner.this, "Error deleting meal: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
             });
 
+
             mealContainer.addView(mealView);
-            loadMeals();
+
         } else {
             Log.e("MealPlanner", "Meal is null");
         }
@@ -185,33 +190,38 @@ public class MealPlanner extends AppCompatActivity {
         Meal mealData = new Meal(dayy, meal, notes);
 
         if (mealItem != null) {
+            // **Updating an existing meal**
             String mealId = mealItem.getTag().toString();
             db.child(userId).child("meals").child(mealId).setValue(mealData)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(MealPlanner.this, "Meal updated successfully", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
+                        loadMeals();  // **Refresh the meal list after update**
                     })
-                    .addOnFailureListener(e -> Toast.makeText(MealPlanner.this, "Error updating meal: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e ->
+                            Toast.makeText(MealPlanner.this, "Error updating meal: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         } else {
+            // **Adding a new meal**
             String mealId = db.child(userId).child("meals").push().getKey();
             db.child(userId).child("meals").child(mealId).setValue(mealData)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(MealPlanner.this, "Meal saved successfully", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
+                        loadMeals();  // **Refresh the meal list after adding new meal**
                     })
-                    .addOnFailureListener(e -> Toast.makeText(MealPlanner.this, "Error saving meal: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e ->
+                            Toast.makeText(MealPlanner.this, "Error saving meal: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
 
     // Meal data model class
     public static class Meal {
+        private String mealId;  // Add this field
         private String day;
         private String meal;
         private String notes;
 
-        public Meal() {
-            // Default constructor required for calls to DataSnapshot.getValue(Meal.class)
-        }
+        public Meal() { }
 
         public Meal(String day, String meal, String notes) {
             this.day = day;
@@ -219,7 +229,15 @@ public class MealPlanner extends AppCompatActivity {
             this.notes = notes;
         }
 
-        // Getters
+        // Getters and Setters
+        public String getMealId() {
+            return mealId;
+        }
+
+        public void setMealId(String mealId) {
+            this.mealId = mealId;
+        }
+
         public String getMeal() {
             return meal;
         }
@@ -236,4 +254,5 @@ public class MealPlanner extends AppCompatActivity {
             this.day = day;
         }
     }
+
 }

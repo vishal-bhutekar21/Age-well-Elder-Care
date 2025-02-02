@@ -510,7 +510,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:id="@+id/mealplans"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:orientation="vertical"
                 android:background="@drawable/empty_shape"
                 android:layout_columnWeight="1"

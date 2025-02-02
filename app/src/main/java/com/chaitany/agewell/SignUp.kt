@@ -7,15 +7,19 @@ import android.telephony.SmsManager
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.CheckBox
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.chaitany.agewell.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.auth.FirebaseAuth
@@ -26,13 +30,14 @@ class SignUp : AppCompatActivity() {
     private lateinit var nameField: TextInputEditText
     private lateinit var mobileField: TextInputEditText
     private lateinit var ageField: TextInputEditText
-    private lateinit var genderField: TextInputEditText
+    private lateinit var genderField: AutoCompleteTextView
     private lateinit var locationField: TextInputEditText
     private lateinit var passwordField: TextInputEditText
     private lateinit var signupButton: MaterialButton
     private lateinit var progressBar: ProgressBar
     private lateinit var loginButton:MaterialButton
     private val REQUEST_CODE_SEND_SMS = 101
+    private lateinit var genderOptions:ArrayAdapter<String>
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var database: DatabaseReference
@@ -57,25 +62,41 @@ class SignUp : AppCompatActivity() {
 
         val cbShowPassword = findViewById<CheckBox>(R.id.cbShowPassword)
 
+        val genderOptions = arrayOf("Male", "Female", "Other")
+
+// Create an adapter and set it to AutoCompleteTextView
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, genderOptions)
+        genderField.setAdapter(adapter)
+        genderField.setOnClickListener {
+            genderField.showDropDown()
+        }
+
         cbShowPassword.setOnCheckedChangeListener { _, isChecked ->
             togglePasswordVisibility(passwordField, isChecked)
         }
-
         signupButton.setOnClickListener {
-            val name = nameField.text.toString()
-            val mobile = mobileField.text.toString()
-            val age = ageField.text.toString()
-            val gender = genderField.text.toString()
-            val location = locationField.text.toString()
-            val password = passwordField.text.toString()
+            val name = nameField.text.toString().trim()
+            val mobile = mobileField.text.toString().trim()
+            val age = ageField.text.toString().trim()
+            val gender = genderField.text.toString().trim()
+            val location = locationField.text.toString().trim()
+            val password = passwordField.text.toString().trim()
 
-            if (validateFields(nameField, mobileField, ageField, genderField, locationField, passwordField,progressBar)) {
+            if (validateFields(nameField, mobileField, ageField, genderField, locationField, passwordField, progressBar)) {
                 progressBar.visibility = View.VISIBLE
-                val otp = generateOtp()
-                sendOtpToUser(mobile, otp) // Send OTP to user
-                openOtpActivity(mobile, otp, name, age, gender, location, password) // Open OTP activity
+                checkIfUserExists(mobile) { exists ->
+                    if (exists) {
+                        progressBar.visibility = View.GONE
+                        showUserExistsDialog(mobile) // Show alert if user exists
+                    } else {
+                        val otp = generateOtp()
+                        sendOtpToUser(mobile, otp) // Send OTP to user
+                        openOtpActivity(mobile, otp, name, age, gender, location, password) // Open OTP activity
+                    }
+                }
             }
         }
+
 
         loginButton.setOnClickListener {
             val intent=Intent(this,Login::class.java)
@@ -175,7 +196,7 @@ class SignUp : AppCompatActivity() {
         nameField: TextInputEditText,
         mobileField: TextInputEditText,
         ageField: TextInputEditText,
-        genderField: TextInputEditText,
+        genderField: AutoCompleteTextView,
         locationField: TextInputEditText,
         passwordField: TextInputEditText,
         progressBar: ProgressBar
@@ -231,8 +252,10 @@ class SignUp : AppCompatActivity() {
 
         // Validate Gender
         if (gender.isEmpty()) {
-            genderField.error = "Gender cannot be empty"
-            isValid = false
+            findViewById<TextInputLayout>(R.id.genderInputLayout).error = "Select a valid gender"
+            isValid=false
+        } else {
+            findViewById<TextInputLayout>(R.id.genderInputLayout).error = null
         }
 
         // Validate Location
@@ -266,4 +289,27 @@ class SignUp : AppCompatActivity() {
         }
         passwordField.setSelection(passwordField.text?.length ?: 0) // Keeps cursor at the end
     }
+
+    private fun checkIfUserExists(mobile: String, callback: (Boolean) -> Unit) {
+        val databaseRef = FirebaseDatabase.getInstance().getReference("users")
+
+        databaseRef.child(mobile).get().addOnSuccessListener { dataSnapshot ->
+            callback(dataSnapshot.exists()) // Returns true if user exists, false otherwise
+        }.addOnFailureListener {
+            progressBar.visibility = View.GONE
+            Toast.makeText(this, "Error checking user", Toast.LENGTH_SHORT).show()
+            callback(false) // Assume false in case of error
+        }
+    }
+
+    private fun showUserExistsDialog(mobile: String) {
+        AlertDialog.Builder(this)
+            .setTitle("User Already Exists")
+            .setMessage("An account is already registered with this mobile number: $mobile.\nPlease signup in or use a different number.")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
 }

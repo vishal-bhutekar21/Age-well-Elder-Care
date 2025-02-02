@@ -6,12 +6,17 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.*
+import com.chaitany.agewell.com.chaitany.agewell.DataStorer
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class globalchat : AppCompatActivity() {
 
@@ -27,6 +32,8 @@ class globalchat : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_globalchat)
          userMobile=getUserMobile()
+
+        DataStorer.context=this
 
 
 
@@ -59,7 +66,11 @@ class globalchat : AppCompatActivity() {
                 val currentDate = sdfDate.format(Date())
                 val currentTime = sdfTime.format(Date())
 
-                val chatMessage = ChatMessage(userMobile, message, currentTime, currentDate)
+                // Retrieve user details from SharedPreferences
+                val sharedPref = getSharedPreferences("UserLogin", MODE_PRIVATE)
+                val name = sharedPref.getString("name", "User Name")
+                val chatMessage =
+                    name?.let { it1 -> ChatMessage(it1, message, currentTime, currentDate) }
                 database.push().setValue(chatMessage)
                 messageEditText.text.clear()
             }

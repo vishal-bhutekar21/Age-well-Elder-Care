@@ -26,7 +26,7 @@
             android:orientation="vertical"
             android:background="@drawable/empty_shape"
             android:backgroundTint="@color/white"
-            android:padding="16dp">
+            android:padding="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:background="@drawable/empty_shape"
                 android:backgroundTint="@color/white"
                 android:orientation="vertical"
-                android:padding="10dp">
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -63,9 +63,11 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/username"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Hi, Alex Johnson"
@@ -91,15 +93,19 @@
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:layout_marginEnd="16dp"
+                                android:layout_marginEnd="5dp"
+                                android:layout_marginLeft="5dp"
 
                                 android:backgroundTint="@color/gray_800"
-                                android:src="@drawable/ic_noti" />
+                                android:src="@drawable/ic_noti"
+                                android:padding="5dp"/>
 
                             <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:src="@drawable/img_oldman" />
+                                android:id="@+id/user_png_dot"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:src="@drawable/img_oldman"
+                               />
                         </LinearLayout>
                     </RelativeLayout>
 
@@ -388,6 +394,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Track your health"
+                    android:textAlignment="center"
                     android:textColor="#6B7280"
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
@@ -455,6 +462,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAlignment="center"
                     android:text="read good advices"
                     android:textColor="#6B7280"
                     android:layout_gravity="center_horizontal" />
@@ -486,6 +494,7 @@
                     android:layout_height="wrap_content"
                     android:text="Exercise Routines"
                     android:textStyle="bold"
+                    android:textAlignment="center"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="4dp" />
 
@@ -494,6 +503,7 @@
                     android:layout_height="wrap_content"
                     android:text="Stay active and healthy"
                     android:textColor="#6B7280"
+                    android:textAlignment="center"
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
 
@@ -558,6 +568,7 @@
                     android:layout_height="wrap_content"
                     android:text="Contact Caretaker"
                     android:textStyle="bold"
+                    android:textAlignment="center"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="4dp" />
 
@@ -565,6 +576,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Get assistance"
+                    android:textAlignment="center"
                     android:textColor="#6B7280"
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
@@ -575,7 +587,7 @@
 </ScrollView>
 <com.google.android.material.navigation.NavigationView
 android:id="@+id/navigationView"
-android:layout_width="wrap_content"
+android:layout_width="250dp"
 android:layout_height="match_parent"
 android:layout_gravity="start"
 android:background="@android:color/white"

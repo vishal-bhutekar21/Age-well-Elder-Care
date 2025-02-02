@@ -1,3 +1,5 @@
+import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -6,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.chaitany.agewell.ChatMessage
 import com.chaitany.agewell.R
+import com.chaitany.agewell.com.chaitany.agewell.DataStorer
 import kotlin.random.Random
 
 class ChatAdapter(private val chatList: List<ChatMessage>) :
@@ -27,6 +30,8 @@ class ChatAdapter(private val chatList: List<ChatMessage>) :
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val chat = chatList[position]
+        // Retrieve user details from SharedPreferences
+
         holder.userTextView.text = chat.mobile
         holder.messageTextView.text = chat.message
         holder.timeTextView.text = chat.time

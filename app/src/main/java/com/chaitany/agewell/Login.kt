@@ -33,6 +33,8 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+
+
         // Initialize views
         mobileEditText = findViewById(R.id.etMobileNumber)
         passwordEditText = findViewById(R.id.etPassword)
@@ -92,18 +94,23 @@ class Login : AppCompatActivity() {
                 if (user != null && user.exists()) {
                     val storedPassword = user.child("password").value.toString()
                     if (storedPassword == password) {
-                        // Successful login, save mobile number to SharedPreferences
+                        // Successful login, save all user details to SharedPreferences
                         val sharedPref = getSharedPreferences("UserLogin", MODE_PRIVATE)
                         val editor = sharedPref.edit()
 
-                        // Store mobile number
+                        // Save all user details
+                        editor.putString("name", user.child("name").value.toString())
                         editor.putString("mobile", mobile)
+                        editor.putString("age", user.child("age").value.toString())
+                        editor.putString("gender", user.child("gender").value.toString())
+                        editor.putString("location", user.child("location").value.toString())
 
                         // Store isLogged as true
                         editor.putBoolean("isLogged", true)
 
                         // Apply changes to SharedPreferences
                         editor.apply()
+
                         Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
 
                         // Proceed to next activity
@@ -116,6 +123,7 @@ class Login : AppCompatActivity() {
                 } else {
                     Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show()
                 }
+
             } else {
                 Toast.makeText(this, "Login Failed. Please try again", Toast.LENGTH_SHORT).show()
             }

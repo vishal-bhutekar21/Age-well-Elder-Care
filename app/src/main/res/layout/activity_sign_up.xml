@@ -76,22 +76,28 @@
             android:inputType="number"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Gender Field -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/genderInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/genderField"
+        <!-- Gender Field with Dropdown -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/genderInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:hint="Gender"
-            android:inputType="text"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:paddingVertical="4dp">
 
-    <!-- Location Field -->
+            <AutoCompleteTextView
+                android:id="@+id/genderField"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:textSize="16sp"
+                android:background="?android:attr/editTextBackground"
+                android:inputType="none"
+                android:focusable="false"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <!-- Location Field -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/locationInputLayout"
         android:layout_width="match_parent"

@@ -7,8 +7,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -45,6 +47,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             return insets;
         });
 
+
         // Initialize Views
         drawerLayout = findViewById(R.id.drawerLayout);
         menuButton = findViewById(R.id.menubars); // Find the ImageView for the menu button
@@ -55,6 +58,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         layoutmealplan = findViewById(R.id.mealplans);
         layout_elder_connect = findViewById(R.id.layout_elder_connect);
         layout_exercise=findViewById(R.id.layoutexercise);
+        ImageView userimg=findViewById(R.id.user_png_dot);
+        TextView username= findViewById(R.id.username);
 
 
         // Setup Navigation Drawer
@@ -68,6 +73,37 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         // Set Navigation View Listener
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+
+        // Retrieve user details from SharedPreferences
+        SharedPreferences sharedPref = getSharedPreferences("UserLogin", MODE_PRIVATE);
+        String name = sharedPref.getString("name", "User Name");
+        String mobile = sharedPref.getString("mobile", "XXXX XX XXXX");
+        String gender=sharedPref.getString("gender","Gender");
+
+        // Find the TextViews in the header layout
+        TextView usernameTextView = headerView.findViewById(R.id.username);
+        TextView mobileTextView = headerView.findViewById(R.id.mobile);
+        ImageView user_png=headerView.findViewById(R.id.user_png);
+
+        if(gender.equals("Male")){
+          user_png.setImageResource(R.drawable.img_oldman);
+          userimg.setImageResource(R.drawable.img_oldman);
+        }
+        if(gender.equals("Female")){
+            user_png.setImageResource(R.drawable.img_oldfemale);
+            userimg.setImageResource(R.drawable.img_oldfemale);
+        }
+
+
+        // Set the user details in the TextViews
+
+
+        username.setText("Hi, "+name);
+        usernameTextView.setText(name);
+        mobileTextView.setText(mobile);
+
 
         // Handle Button Clicks
         layout_bmi_index.setOnClickListener(v -> {

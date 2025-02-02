@@ -38,6 +38,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+    ImageView useView;
     SharedPreferences sharedPreferences;
 
     private LinearLayout layoutEmergencyContact, layoutMedicalStock, layoutHealthMonitor, layoutmealplan,
@@ -78,6 +79,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     }
 
     private void initializeViews() {
+        useView=findViewById(R.id.user_png_dot);
         drawerLayout = findViewById(R.id.drawerLayout);
         menuButton = findViewById(R.id.menubars);
         layout_bmi_index = findViewById(R.id.layout_bmi_index);
@@ -367,6 +369,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     }
 
     private void setupClickListeners() {
+
+        useView.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, ProfileActivity.class)));
         layout_bmi_index.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, BMIActivity.class)));
         layoutEmergencyContact.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, EmergencyContact.class)));
         layout_elder_connect.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, globalchat.class)));

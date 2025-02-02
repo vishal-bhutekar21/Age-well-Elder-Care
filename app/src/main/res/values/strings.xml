@@ -12,6 +12,7 @@
         <item>Saturday</item>
         <item>Sunday</item>
     </string-array>
+    <string name="hint_text">a</string>
 
 
 </resources>

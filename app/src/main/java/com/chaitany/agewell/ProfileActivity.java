@@ -1,8 +1,11 @@
 package com.chaitany.agewell;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -10,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -46,11 +50,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Initialize Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        userRef = database.getReference("Users");
+        userRef = database.getReference("users");
 
         // Get mobile number from SharedPreferences
-        SharedPreferences preferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        mobileNumber = preferences.getString("mobile", "");
+        SharedPreferences preferences = getSharedPreferences("UserLogin", MODE_PRIVATE);
+        mobileNumber = preferences.getString("mobile", "9322067937");
 
         if (TextUtils.isEmpty(mobileNumber)) {
             Toast.makeText(this, "Mobile number not found!", Toast.LENGTH_SHORT).show();
@@ -59,9 +63,9 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         // Initialize UI elements
+
         etName = findViewById(R.id.etName);
         etAge = findViewById(R.id.etAge);
-        etMobile = findViewById(R.id.etMobile);
         etAddress = findViewById(R.id.etAddress);
         etCity = findViewById(R.id.etCity);
         etState = findViewById(R.id.etState);
@@ -79,14 +83,21 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void fetchUserData() {
+        // Show progress dialog while fetching user data
+        ProgressDialog progressDialog = new ProgressDialog(ProfileActivity.this);
+        progressDialog.setMessage("Fetching user data...");
+        progressDialog.setCancelable(false); // Prevent user from dismissing the dialog
+        progressDialog.show();
+
         userRef.child(mobileNumber).get().addOnCompleteListener(task -> {
+            progressDialog.dismiss(); // Dismiss the progress dialog after task completes
+
             if (task.isSuccessful() && task.getResult().exists()) {
                 DataSnapshot snapshot = task.getResult();
 
                 etName.setText(snapshot.child("name").getValue(String.class));
                 etAge.setText(snapshot.child("age").getValue(String.class));
-                etMobile.setText(mobileNumber); // Mobile number should not be editable
-                etAddress.setText(snapshot.child("address").getValue(String.class));
+                etAddress.setText(snapshot.child("location").getValue(String.class));
                 etCity.setText(snapshot.child("city").getValue(String.class));
                 etState.setText(snapshot.child("state").getValue(String.class));
                 etPincode.setText(snapshot.child("pincode").getValue(String.class));
@@ -106,6 +117,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void enableEditing() {
         etName.setEnabled(true);
@@ -130,8 +142,8 @@ public class ProfileActivity extends AppCompatActivity {
         String pincode = etPincode.getText().toString().trim();
         String height = etHeight.getText().toString().trim();
         String weight = etWeight.getText().toString().trim();
-        String gender = ((RadioButton) findViewById(radioGender.getCheckedRadioButtonId())).getText().toString();
 
+        // Validation checks
         if (name.isEmpty() || age.isEmpty() || address.isEmpty() || city.isEmpty() ||
                 state.isEmpty() || pincode.isEmpty() || height.isEmpty() || weight.isEmpty()) {
             Toast.makeText(this, "All fields must be filled!", Toast.LENGTH_SHORT).show();
@@ -158,36 +170,74 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // Store only changed fields in Firebase
-        checkAndUpdate("name", name);
-        checkAndUpdate("age", age);
-        checkAndUpdate("address", address);
-        checkAndUpdate("city", city);
-        checkAndUpdate("state", state);
-        checkAndUpdate("pincode", pincode);
-        checkAndUpdate("height", height);
-        checkAndUpdate("weight", weight);
-        checkAndUpdate("gender", gender);
+        // Show progress dialog while updating profile
+        ProgressDialog progressDialog = new ProgressDialog(ProfileActivity.this);
+        progressDialog.setMessage("Updating profile...");
+        progressDialog.setCancelable(false); // Prevents the user from dismissing the dialog
+        progressDialog.show();
 
-        if (!updatedFields.isEmpty()) {
-            userRef.child(mobileNumber).updateChildren(updatedFields).addOnSuccessListener(aVoid ->
-                    Toast.makeText(ProfileActivity.this, "Profile updated successfully!", Toast.LENGTH_SHORT).show()
-            ).addOnFailureListener(e ->
-                    Toast.makeText(ProfileActivity.this, "Failed to update profile!", Toast.LENGTH_SHORT).show()
-            );
-        } else {
-            Toast.makeText(this, "No changes detected!", Toast.LENGTH_SHORT).show();
-        }
+        // Fetch current data from Firebase and compare with the new input
+        userRef.child(mobileNumber).get()
+                .addOnSuccessListener(dataSnapshot -> {
+                    if (dataSnapshot.exists()) {
+                        // Get current data from Firebase
+                        String currentName = dataSnapshot.child("name").getValue(String.class);
+                        String currentAge = dataSnapshot.child("age").getValue(String.class);
+                        String currentAddress = dataSnapshot.child("address").getValue(String.class);
+                        String currentCity = dataSnapshot.child("city").getValue(String.class);
+                        String currentState = dataSnapshot.child("state").getValue(String.class);
+                        String currentPincode = dataSnapshot.child("pincode").getValue(String.class);
+                        String currentHeight = dataSnapshot.child("height").getValue(String.class);
+                        String currentWeight = dataSnapshot.child("weight").getValue(String.class);
+
+                        // Compare with new values and add to updatedFields if changed
+                        if (!name.equals(currentName)) updatedFields.put("name", name);
+                        if (!age.equals(currentAge)) updatedFields.put("age", age);
+                        if (!address.equals(currentAddress)) updatedFields.put("address", address);
+                        if (!city.equals(currentCity)) updatedFields.put("city", city);
+                        if (!state.equals(currentState)) updatedFields.put("state", state);
+                        if (!pincode.equals(currentPincode)) updatedFields.put("pincode", pincode);
+                        if (!height.equals(currentHeight)) updatedFields.put("height", height);
+                        if (!weight.equals(currentWeight)) updatedFields.put("weight", weight);
+
+                        // Now update only changed fields
+                        if (!updatedFields.isEmpty()) {
+                            userRef.child(mobileNumber).updateChildren(updatedFields)
+                                    .addOnSuccessListener(aVoid -> {
+                                        progressDialog.dismiss(); // Dismiss progress dialog
+                                        // Show success dialog
+                                        new AlertDialog.Builder(ProfileActivity.this)
+                                                .setTitle("Profile Updated")
+                                                .setMessage("Your profile has been updated successfully!")
+                                                .setPositiveButton("OK", (dialog, which) -> {
+                                                    // Navigate to Dashboard Activity
+                                                    Intent intent = new Intent(ProfileActivity.this, Dashboard.class);
+                                                    startActivity(intent);
+                                                    finish(); // Optionally finish this activity
+                                                })
+                                                .setCancelable(false)
+                                                .show();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        progressDialog.dismiss(); // Dismiss progress dialog
+                                        Toast.makeText(ProfileActivity.this, "Failed to update profile!", Toast.LENGTH_SHORT).show();
+                                    });
+                        } else {
+                            progressDialog.dismiss(); // Dismiss progress dialog
+                            Toast.makeText(ProfileActivity.this, "No changes detected!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss(); // Dismiss progress dialog
+                    Toast.makeText(ProfileActivity.this, "Failed to fetch current profile data!", Toast.LENGTH_SHORT).show();
+                });
     }
 
-    private void checkAndUpdate(String key, String newValue) {
-        String existingValue = ((TextInputEditText) findViewById(getResources().getIdentifier("et" + capitalize(key), "id", getPackageName()))).getText().toString().trim();
-        if (!existingValue.equals(newValue)) {
-            updatedFields.put(key, newValue);
-        }
-    }
 
-    private String capitalize(String text) {
-        return text.substring(0, 1).toUpperCase() + text.substring(1);
-    }
+
+
+
+
+
 }

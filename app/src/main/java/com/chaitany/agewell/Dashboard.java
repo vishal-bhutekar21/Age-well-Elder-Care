@@ -251,24 +251,26 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     }
 
     private void addTaskToSection(Task task) {
-        LinearLayout targetSection = null;
+        LinearLayout targetSection2;
         String sectionTime = task.getTime().toLowerCase();
         ViewGroup parent;
 
         // Determine the target section based on the task time
         if (sectionTime.contains("morning")) {
             parent = (ViewGroup) morningTasksLayout.getParent();
-            targetSection = (LinearLayout) parent.getChildAt(parent.indexOfChild(morningTasksLayout) + 1);
+            targetSection2 = (LinearLayout) parent.getChildAt(parent.indexOfChild(morningTasksLayout) + 1);
         } else if (sectionTime.contains("afternoon")) {
             parent = (ViewGroup) afternoonTasksLayout.getParent();
-            targetSection = (LinearLayout) parent.getChildAt(parent.indexOfChild(afternoonTasksLayout) + 1);
+            targetSection2 = (LinearLayout) parent.getChildAt(parent.indexOfChild(afternoonTasksLayout) + 1);
         } else if (sectionTime.contains("night")) {
             parent = (ViewGroup) nightTasksLayout.getParent();
-            targetSection = (LinearLayout) parent.getChildAt(parent.indexOfChild(nightTasksLayout) + 1);
+            targetSection2 = (LinearLayout) parent.getChildAt(parent.indexOfChild(nightTasksLayout) + 1);
+        } else {
+            targetSection2 = null;
         }
 
-        if (targetSection != null) {
-            View taskView = getLayoutInflater().inflate(R.layout.item_task, targetSection, false);
+        if (targetSection2 != null) {
+            final View taskView = getLayoutInflater().inflate(R.layout.item_task, targetSection2, false);
 
             // Add margin between items
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -281,15 +283,54 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             TextView medicineNameText = taskView.findViewById(R.id.tvMedicineName);
             TextView mealTimeText = taskView.findViewById(R.id.tvMealTime);
             TextView stockValueText = taskView.findViewById(R.id.tvStockValue);
+            CheckBox completeTaskCheckBox = taskView.findViewById(R.id.cbCompleteTask);
 
             medicineNameText.setText(task.getMedicineName());
             mealTimeText.setText(task.getMealTime());
             stockValueText.setText(task.getQuantity() + " tablets");
 
-            targetSection.addView(taskView);
+            // Set up checkbox listener with Firebase integration
+            completeTaskCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    new AlertDialog.Builder(Dashboard.this)
+                            .setTitle("Task Completion")
+                            .setMessage("Are you sure you want to mark this task as completed?")
+                            .setPositiveButton("Yes", (dialog, which) -> {
+                                // Decrease the quantity locally first
+                                int newQuantity = task.getQuantity() - 1;
+                                if (newQuantity >= 0) {
+                                    task.setQuantity(newQuantity);
+                                    tasksRef.child(task.getMedicineName()).child("quantity")
+                                            .setValue(newQuantity)
+                                            .addOnSuccessListener(aVoid -> {
+                                                stockValueText.setText(newQuantity + " tablets");
+                                                if (newQuantity == 0) {
+                                                    targetSection2.removeView(taskView);
+                                                }
+                                                Toast.makeText(Dashboard.this,
+                                                        "Task completed! Remaining tablets: " + newQuantity,
+                                                        Toast.LENGTH_SHORT).show();
+                                                completeTaskCheckBox.setChecked(false);
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Toast.makeText(Dashboard.this,
+                                                        "Failed to update quantity: " + e.getMessage(),
+                                                        Toast.LENGTH_SHORT).show();
+                                                completeTaskCheckBox.setChecked(false);
+                                            });
+                                } else {
+                                    Toast.makeText(Dashboard.this, "No tablets left!", Toast.LENGTH_SHORT).show();
+                                    completeTaskCheckBox.setChecked(false);
+                                }
+                            })
+                            .setNegativeButton("No", (dialog, which) -> completeTaskCheckBox.setChecked(false))
+                            .show();
+                }
+            });
+
+            targetSection2.addView(taskView);
         }
     }
-
     // New method to add predefined tasks based on elderly activities
     private void addPredefinedTasks() {
         // Predefined tasks for morning, afternoon, and night
@@ -336,12 +377,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
             TextView taskNameText = taskView.findViewById(R.id.tvPredefinedTaskName);
             TextView taskTimeText = taskView.findViewById(R.id.tvPredefinedTaskTime);
-            TextView taskQuantityText = taskView.findViewById(R.id.tvPredefinedTaskQuantity);
             CheckBox completeTaskCheckBox = taskView.findViewById(R.id.cbCompleteTask);
 
             taskNameText.setText(task.getMedicineName());
             taskTimeText.setText(task.getMealTime());
-            taskQuantityText.setText(task.getQuantity() + " units");
 
             // Set up checkbox listener
             completeTaskCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {

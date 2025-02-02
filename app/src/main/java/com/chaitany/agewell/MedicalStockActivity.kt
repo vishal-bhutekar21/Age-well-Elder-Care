@@ -18,7 +18,6 @@ class MedicalStockActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var database: DatabaseReference
     private val medicines = mutableListOf<Medicine>()
-    private val DEFAULT_PHONE = "9322067937"  // Default phone number
     private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,12 +33,6 @@ class MedicalStockActivity : AppCompatActivity() {
         progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Loading medicines...")
         progressDialog.setCancelable(false)
-
-        // Set the default phone number in SharedPreferences
-        sharedPreferences.edit().apply {
-            putString("userPhone", DEFAULT_PHONE)
-            apply()
-        }
 
         setupRecyclerView()
         loadMedicines()
@@ -68,12 +61,14 @@ class MedicalStockActivity : AppCompatActivity() {
     }
 
     private fun loadMedicines() {
-        val userPhone = DEFAULT_PHONE
+        val userPhone = sharedPreferences.getString("mobile", null) // Retrieve from SharedPreferences
 
-        if (userPhone.isEmpty()) {
-            Toast.makeText(this, "User phone number not found", Toast.LENGTH_SHORT).show()
+        if (userPhone.isNullOrEmpty()) {
+            Toast.makeText(this, "User  phone number not found", Toast.LENGTH_SHORT).show()
             return
         }
+
+        Log.d("User  Phone", "Fetching medicines for user: $userPhone") // Log the user phone
 
         progressDialog.show()  // Show loading
 
@@ -83,15 +78,22 @@ class MedicalStockActivity : AppCompatActivity() {
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     medicines.clear()
-                    snapshot.children.forEach {
-                        val medicine = it.getValue(Medicine::class.java)
-                        medicine?.let { medicines.add(it) }
+                    if (snapshot.exists()) {
+                        Log.d("FirebaseData", "Medicines found for user: $userPhone")
+                        snapshot.children.forEach {
+                            val medicine = it.getValue(Medicine::class.java)
+                            medicine?.let { medicines.add(it) }
+                        }
+                        adapter.notifyDataSetChanged()
+                    } else {
+                        Log.d("FirebaseData", "No medicines found for user: $userPhone")
+                        Toast.makeText(this@MedicalStockActivity, "No medicines found.", Toast.LENGTH_SHORT).show()
                     }
-                    adapter.notifyDataSetChanged()
                     progressDialog.dismiss()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
+                    Log.e("FirebaseError", "Error loading medicines: ${error.message}")
                     Toast.makeText(this@MedicalStockActivity,
                         "Error loading medicines: ${error.message}",
                         Toast.LENGTH_SHORT).show()
@@ -101,7 +103,7 @@ class MedicalStockActivity : AppCompatActivity() {
     }
 
     private fun deleteMedicine(medicine: Medicine) {
-        val userPhone = DEFAULT_PHONE
+        val userPhone = sharedPreferences.getString("userPhone", null) // Retrieve from SharedPreferences
         val medicineId = medicine.id // This ID is the Firebase generated unique key
 
         if (medicineId.isNullOrEmpty()) {
@@ -132,7 +134,7 @@ class MedicalStockActivity : AppCompatActivity() {
 
     // Function to delete the task associated with the medicine
     private fun deleteTask(medicineId: String) {
-        val userPhone = DEFAULT_PHONE
+        val userPhone = sharedPreferences.getString("userPhone", null) // Retrieve from SharedPreferences
 
         if (medicineId.isNullOrEmpty()) {
             Toast.makeText(this, "Invalid medicine ID", Toast.LENGTH_SHORT).show()
@@ -165,4 +167,3 @@ class MedicalStockActivity : AppCompatActivity() {
             }
     }
 }
-

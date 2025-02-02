@@ -62,7 +62,7 @@
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_edit"
                     android:contentDescription="Edit"
-
+                    android:tint="#10B981"
                     android:layout_marginEnd="16dp"/>
 
                 <ImageView
@@ -71,7 +71,7 @@
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_delete"
                     android:contentDescription="Delete"
-                    />
+                    android:tint="#10B981"/>
             </LinearLayout>
         </LinearLayout>
 

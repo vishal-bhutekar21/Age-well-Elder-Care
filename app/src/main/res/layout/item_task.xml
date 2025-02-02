@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="4dp"
-    android:background="@drawable/empty_shape"
-    android:backgroundTint="#F8F9FA"
     android:orientation="horizontal"
-    android:padding="12dp">
+    android:padding="16dp"
+    android:gravity="center_vertical">
 
-    <!-- Medicine Details Section -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -20,8 +16,6 @@
             android:id="@+id/tvMedicineName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Medicine Name"
-            android:textColor="#1F2937"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -29,20 +23,20 @@
             android:id="@+id/tvMealTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Before Breakfast"
-            android:textColor="#6B7280"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tvStockValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textSize="14sp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvStockValue"
+    <CheckBox
+        android:id="@+id/cbCompleteTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:text="20 tablets"
-        android:textColor="#10B981"
-        android:textSize="14sp"
-        android:textStyle="bold" />
-
+        android:layout_marginStart="16dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 </LinearLayout>

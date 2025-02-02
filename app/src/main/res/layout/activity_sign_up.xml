@@ -16,7 +16,7 @@
 
         <ImageView
             android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:src="@drawable/app_heading"
             />
         <TextView
@@ -27,7 +27,7 @@
             android:textStyle="normal"
             android:textColor="@color/primary"
             android:textSize="30dp"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             />
     <!-- Name Field -->
     <com.google.android.material.textfield.TextInputLayout
@@ -121,13 +121,41 @@
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+        <CheckBox
+            android:id="@+id/cbShowPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Password"
+            android:layout_gravity="start"
+            android:padding="8dp"/>
+
     <!-- Sign Up Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signupButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign Up"
-        android:layout_marginTop="16dp"/>'
+        android:layout_margin="10dp"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Already have an account ? Login"
+            android:textColor="@color/black"
+            android:layout_margin="10dp"
+            android:textAlignment="center"
+            />
+
+        <!-- Sign Up Button -->
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:textColor="@color/primary"
+            android:backgroundTint="#FFFFFF"
+            android:padding="16dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"

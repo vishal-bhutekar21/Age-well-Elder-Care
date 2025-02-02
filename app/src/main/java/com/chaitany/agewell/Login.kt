@@ -4,14 +4,19 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.example.yourapp.utils.UserPreferences
+import com.google.android.material.textfield.TextInputEditText
 
 class Login : AppCompatActivity() {
 
@@ -37,6 +42,17 @@ class Login : AppCompatActivity() {
         // Initialize Firebase Database reference
         databaseReference = FirebaseDatabase.getInstance().reference.child("users")
 
+
+        val forgot_pass=findViewById<TextView>(R.id.tv_forgot_password)
+        forgot_pass.setOnClickListener {
+            val intent = Intent(this, ForgotPassword::class.java)
+            startActivity(intent)
+        }
+        val cbShowPassword = findViewById<CheckBox>(R.id.cbShowPassword)
+
+        cbShowPassword.setOnCheckedChangeListener { _, isChecked ->
+            togglePasswordVisibility(passwordEditText, isChecked)
+        }
         // Initialize ProgressDialog
         progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Logging in...")
@@ -50,27 +66,20 @@ class Login : AppCompatActivity() {
             val mobile = mobileEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
-            // Validation
-            if (TextUtils.isEmpty(mobile)) {
-                mobileEditText.error = "Mobile number is required"
-                return@setOnClickListener
-            }
-            if (TextUtils.isEmpty(password)) {
-                passwordEditText.error = "Password is required"
-                return@setOnClickListener
-            }
+            if (validateLoginFields(mobileEditText, passwordEditText)) {
+                // Show ProgressDialog
+                progressDialog.show()
 
-            // Show ProgressDialog
-            progressDialog.show()
-
-            // Call login function
-            loginUser(mobile, password)
+                // Call login function
+                loginUser(mobile, password)
+            }
         }
 
         // Sign up button click listener
         signUpButton.setOnClickListener {
             val intent = Intent(this, SignUp::class.java)
             startActivity(intent)
+            finish()
         }
     }
 
@@ -112,4 +121,48 @@ class Login : AppCompatActivity() {
             }
         }
     }
+
+    private fun togglePasswordVisibility(passwordField: EditText, showPassword: Boolean) {
+        if (showPassword) {
+            passwordField.transformationMethod = HideReturnsTransformationMethod.getInstance()
+        } else {
+            passwordField.transformationMethod = PasswordTransformationMethod.getInstance()
+        }
+        passwordField.setSelection(passwordField.text?.length ?: 0) // Keeps cursor at the end
+    }
+
+    private fun validateLoginFields(
+        mobileEditText: EditText,
+        passwordEditText: EditText
+    ): Boolean {
+        var isValid = true
+
+        // Clear previous errors
+        mobileEditText.error = null
+        passwordEditText.error = null
+
+        val mobile = mobileEditText.text.toString().trim()
+        val password = passwordEditText.text.toString().trim()
+
+        // Validate Mobile Number
+        if (mobile.isEmpty()) {
+            mobileEditText.error = "Mobile number is required"
+            isValid = false
+        } else if (mobile.length != 10 || !mobile.matches(Regex("^[0-9]{10}$"))) {
+            mobileEditText.error = "Enter a valid 10-digit mobile number"
+            isValid = false
+        }
+
+        // Validate Password
+        if (password.isEmpty()) {
+            passwordEditText.error = "Password is required"
+            isValid = false
+        } else if (password.length < 6) {
+            passwordEditText.error = "Password must be at least 6 characters"
+            isValid = false
+        }
+
+        return isValid
+    }
+
 }

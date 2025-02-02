@@ -4,7 +4,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.telephony.SmsManager
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.view.View
+import android.widget.CheckBox
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +31,7 @@ class SignUp : AppCompatActivity() {
     private lateinit var passwordField: TextInputEditText
     private lateinit var signupButton: MaterialButton
     private lateinit var progressBar: ProgressBar
+    private lateinit var loginButton:MaterialButton
     private val REQUEST_CODE_SEND_SMS = 101
 
     private lateinit var mAuth: FirebaseAuth
@@ -46,9 +50,16 @@ class SignUp : AppCompatActivity() {
         passwordField = findViewById(R.id.passwordField)
         signupButton = findViewById(R.id.signupButton)
         progressBar = findViewById(R.id.progressBar)
+        loginButton=findViewById(R.id.btnLogin)
 
         mAuth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
+
+        val cbShowPassword = findViewById<CheckBox>(R.id.cbShowPassword)
+
+        cbShowPassword.setOnCheckedChangeListener { _, isChecked ->
+            togglePasswordVisibility(passwordField, isChecked)
+        }
 
         signupButton.setOnClickListener {
             val name = nameField.text.toString()
@@ -58,14 +69,21 @@ class SignUp : AppCompatActivity() {
             val location = locationField.text.toString()
             val password = passwordField.text.toString()
 
-            if (validateFields(name, mobile, age, gender, location, password)) {
+            if (validateFields(nameField, mobileField, ageField, genderField, locationField, passwordField,progressBar)) {
                 progressBar.visibility = View.VISIBLE
                 val otp = generateOtp()
                 sendOtpToUser(mobile, otp) // Send OTP to user
                 openOtpActivity(mobile, otp, name, age, gender, location, password) // Open OTP activity
             }
         }
+
+        loginButton.setOnClickListener {
+            val intent=Intent(this,Login::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
+
 
     private fun generateOtp(): String {
         // Generate a random 6-digit OTP
@@ -150,44 +168,102 @@ class SignUp : AppCompatActivity() {
             putExtra("password", password)
         }
         startActivity(intent)
+        finish()
     }
 
     private fun validateFields(
-        name: String,
-        mobile: String,
-        age: String,
-        gender: String,
-        location: String,
-        password: String
+        nameField: TextInputEditText,
+        mobileField: TextInputEditText,
+        ageField: TextInputEditText,
+        genderField: TextInputEditText,
+        locationField: TextInputEditText,
+        passwordField: TextInputEditText,
+        progressBar: ProgressBar
     ): Boolean {
-        // Basic validation
-        if (name.isEmpty() || mobile.isEmpty() || age.isEmpty() || gender.isEmpty() || location.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
-            progressBar.visibility = View.GONE
-            return false
+        var isValid = true
+
+        // Reset previous errors
+        nameField.error = null
+        mobileField.error = null
+        ageField.error = null
+        genderField.error = null
+        locationField.error = null
+        passwordField.error = null
+
+        val name = nameField.text.toString().trim()
+        val mobile = mobileField.text.toString().trim()
+        val age = ageField.text.toString().trim()
+        val gender = genderField.text.toString().trim()
+        val location = locationField.text.toString().trim()
+        val password = passwordField.text.toString().trim()
+
+        // Validate Name
+        if (name.isEmpty()) {
+            nameField.error = "Name cannot be empty"
+            isValid = false
         }
 
-        // Validate mobile number (basic check for length)
-        if (mobile.length != 10) {
-            Toast.makeText(this, "Please enter a valid mobile number", Toast.LENGTH_SHORT).show()
-            progressBar.visibility = View.GONE
-            return false
+        // Validate Mobile Number
+        if (mobile.isEmpty()) {
+            mobileField.error = "Mobile number cannot be empty"
+            isValid = false
+        } else if (mobile.length != 10 || !mobile.matches(Regex("^[0-9]{10}$"))) {
+            mobileField.error = "Enter a valid 10-digit mobile number"
+            isValid = false
         }
 
-        // Validate age (ensure it's a number)
-        try {
-            val ageInt = age.toInt()
-            if (ageInt <= 0) {
-                Toast.makeText(this, "Please enter a valid age", Toast.LENGTH_SHORT).show()
-                progressBar.visibility = View.GONE
-                return false
+        // Validate Age
+        if (age.isEmpty()) {
+            ageField.error = "Age cannot be empty"
+            isValid = false
+        } else {
+            try {
+                val ageInt = age.toInt()
+                if (ageInt <= 0) {
+                    ageField.error = "Enter a valid age"
+                    isValid = false
+                }
+            } catch (e: NumberFormatException) {
+                ageField.error = "Age must be a number"
+                isValid = false
             }
-        } catch (e: NumberFormatException) {
-            Toast.makeText(this, "Please enter a valid age", Toast.LENGTH_SHORT).show()
-            progressBar.visibility = View.GONE
-            return false
         }
 
-        return true
+        // Validate Gender
+        if (gender.isEmpty()) {
+            genderField.error = "Gender cannot be empty"
+            isValid = false
+        }
+
+        // Validate Location
+        if (location.isEmpty()) {
+            locationField.error = "Location cannot be empty"
+            isValid = false
+        }
+
+        // Validate Password
+        if (password.isEmpty()) {
+            passwordField.error = "Password cannot be empty"
+            isValid = false
+        } else if (password.length < 6) {
+            passwordField.error = "Password must be at least 6 characters long"
+            isValid = false
+        }
+
+        if (!isValid) {
+            progressBar.visibility = View.GONE
+        }
+
+        return isValid
+    }
+
+
+    private fun togglePasswordVisibility(passwordField: TextInputEditText, showPassword: Boolean) {
+        if (showPassword) {
+            passwordField.transformationMethod = HideReturnsTransformationMethod.getInstance()
+        } else {
+            passwordField.transformationMethod = PasswordTransformationMethod.getInstance()
+        }
+        passwordField.setSelection(passwordField.text?.length ?: 0) // Keeps cursor at the end
     }
 }

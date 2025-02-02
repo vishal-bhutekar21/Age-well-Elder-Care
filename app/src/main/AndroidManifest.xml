@@ -23,13 +23,17 @@
         android:theme="@style/Theme.AgeWell"
         tools:targetApi="31">
         <activity
-            android:name=".OTP"
+            android:name=".ForgotPassword"
             android:exported="false"
             android:theme="@style/Theme.AgeWellSuper"/>
         <activity
+            android:name=".OTP"
+            android:exported="false"
+            android:theme="@style/Theme.AgeWellSuper" />
+        <activity
             android:name=".SignUp"
             android:exported="false"
-            android:theme="@style/Theme.AgeWellSuper"/>
+            android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".globalchat"
             android:exported="false"
@@ -40,53 +44,51 @@
             android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".MealPlanner"
-            android:theme="@style/Theme.AgeWellSuper"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".EmergencyContact"
             android:exported="true"
             android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".ActivityAppointment"
-            android:theme="@style/Theme.AgeWellSuper"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".AddMedicineActivity"
-            android:theme="@style/Theme.AgeWellSuper"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".MedicalStockActivity"
-            android:theme="@style/Theme.AgeWellSuper"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".Dashboard"
-            android:theme="@style/Theme.AgeWellSuper"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".ProfileActivity"
-            android:theme="@style/Theme.AgeWellSuper"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".AboutActivity"
-            android:theme="@style/Theme.AgeWellSuper"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".FeedbackActivity"
-            android:theme="@style/Theme.AgeWellSuper"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".Exercise_suggestion"
-            android:theme="@style/Theme.AgeWellSuper"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.AgeWellSuper" />
         <activity
             android:name=".Login"
-            android:theme="@style/Theme.AgeWellSuper"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"
+            android:theme="@style/Theme.AgeWellSuper"></activity>
         <activity
             android:name=".Splash"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

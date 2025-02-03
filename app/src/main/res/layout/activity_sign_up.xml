@@ -110,7 +110,7 @@
             android:layout_marginBottom="16dp"
             android:hint="Gender"
             app:startIconDrawable="@drawable/sperson"
-            app:startIconMode="custom"
+
             app:endIconMode="dropdown_menu"
             android:drawableTint="@color/gray"
             android:paddingVertical="4dp">
@@ -177,6 +177,7 @@
         android:id="@+id/signupButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:theme="@style/Theme.AgeWellSuper"
         android:text="Sign Up"
         android:drawableRight="@drawable/slogin"
         android:drawableTint="@color/white"

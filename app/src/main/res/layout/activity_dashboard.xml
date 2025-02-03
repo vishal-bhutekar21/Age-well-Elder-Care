@@ -550,16 +550,16 @@
                 android:layout_columnWeight="1"
                 android:orientation="vertical"
                 android:background="@drawable/empty_shape"
-
+                android:id="@+id/nearbyhospital"
                 android:layout_rowWeight="1"
                 android:padding="16dp"
                 android:layout_margin="8dp"
-                android:backgroundTint="#887DD9C7">
+                android:backgroundTint="#96FF6D00">
 
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_health"
+                    android:src="@drawable/ic_hospital"
 
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />
@@ -567,7 +567,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Contact Caretaker"
+                    android:text="Nearby Hospitals"
                     android:textStyle="bold"
                     android:textAlignment="center"
                     android:layout_gravity="center_horizontal"
@@ -576,7 +576,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Get assistance"
+                    android:text="Track nearby Hospitals"
                     android:textAlignment="center"
                     android:textColor="#6B7280"
                     android:layout_gravity="center_horizontal" />

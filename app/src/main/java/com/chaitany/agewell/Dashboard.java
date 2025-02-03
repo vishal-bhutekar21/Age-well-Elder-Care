@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,12 +35,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
+
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     ImageView useView;
     SharedPreferences sharedPreferences;
+
+    private static final String PREFS_NAME = "TaskCompletionPrefs"; // SharedPreferences file name
+    private static final String COMPLETED_TASK_PREFIX = "completed_task_";
+
+    private static final String COMPLETION_DATE_PREFIX = "completion_date_";
+
+    Integer stock;
 
     private LinearLayout layoutEmergencyContact, layoutMedicalStock, layoutHealthMonitor, layoutmealplan,
             layout_bmi_index, layout_elder_connect, layout_exercise;
@@ -215,11 +228,35 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 clearAllTasks();
                 for (DataSnapshot taskSnapshot : dataSnapshot.getChildren()) {
                     Task task = taskSnapshot.getValue(Task.class);
+
                     if (task != null) {
+
+                        // Ensure task name is not null before comparison
+                        if (task.getTaskName() != null && "Take medicine".equals(task.getTaskName())) {
+                            String medicineId = task.getMedicineId(); // Ensure correct field name
+
+                            if (medicineId != null) {
+                                //fetchMedicineStock(medicineId);
+
+                            } else {
+                                Log.e("TaskError", "Medicine ID is null for task: " + task.getTaskName());
+                            }
+                        }
+
+                        Log.d("FirebaseTask", "Task Fetched: " +
+                                "\nTask Name: " + task.getTaskName() +
+                                "\nTime: " + task.getTime() +
+                                "\nMeal Time: " + task.getMealTime() +
+                                "\nQuantity: " + task.getQuantity() +
+                                "\nMedicine ID: " + task.getMedicineId() +
+                                "\nMedicine Name: " + task.getMedicineName());
                         addTaskToSection(task);
+
+
+
+
                     }
                 }
-                // Add predefined tasks after loading tasks from Firebase
                 addPredefinedTasks();
             }
 
@@ -230,6 +267,44 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             }
         });
     }
+
+
+    /**
+     * Fetches medicine stock based on the given medicineId
+     */
+//    private int fetchMedicineStock(String medicineId) {
+//
+//        DatabaseReference medicineRef = FirebaseDatabase.getInstance().getReference("users")
+//                .child(userPhone).child("medicines");
+//
+//        medicineRef.orderByChild("id").equalTo(medicineId)
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        if (dataSnapshot.exists()) {
+//                            for (DataSnapshot medicineSnapshot : dataSnapshot.getChildren()) {
+//                                String name = medicineSnapshot.child("name").getValue(String.class);
+//                                Integer quantity = medicineSnapshot.child("quantity").getValue(Integer.class);
+//                                stock=quantity;
+//
+//                                Log.d("MedicineStock", "Medicine Name: " + name);
+//                                Log.d("MedicineStock", "Stock for medicine " + medicineId + " is: " + quantity);
+//
+//                            }
+//                        } else {
+//                            Log.d("MedicineStock", "No medicine found for ID: " + medicineId);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        Log.e("MedicineStock", "Failed to fetch stock: " + error.getMessage());
+//                    }
+//                });
+//        return stock;
+//    }
+
+
 
 
 
@@ -270,6 +345,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         }
 
         if (targetSection2 != null) {
+            // Check if the task has already been completed today
+            if (isTaskCompleted(task)) {
+                return; // Skip adding the task if already completed
+            }
+
             final View taskView = getLayoutInflater().inflate(R.layout.item_task, targetSection2, false);
 
             // Add margin between items
@@ -279,47 +359,127 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             );
             params.setMargins(0, 4, 0, 4);
             taskView.setLayoutParams(params);
+            TextView stockValueText = taskView.findViewById(R.id.tvStockValue);
+
+            DatabaseReference medicineRef = FirebaseDatabase.getInstance().getReference("users")
+                    .child(userPhone).child("medicines");
+
+            final int[] stock = {0};
+            if (task.getTaskName().equals("Take medicine")) {
+                TextView finalStockValueText1 = stockValueText;
+                medicineRef.orderByChild("id").equalTo(task.getMedicineId())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    for (DataSnapshot medicineSnapshot : dataSnapshot.getChildren()) {
+                                        String name = medicineSnapshot.child("name").getValue(String.class);
+                                        Integer quantity = medicineSnapshot.child("quantity").getValue(Integer.class);
+                                        stock[0] = quantity;
+                                        finalStockValueText1.setText("" + quantity + " tablets");
+                                        Log.d("Hello", "onDataChange: " + quantity + " tablets ");
+                                    }
+                                } else {
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e("MedicineStock", "Failed to fetch stock: " + error.getMessage());
+                            }
+                        });
+            }
 
             TextView medicineNameText = taskView.findViewById(R.id.tvMedicineName);
             TextView mealTimeText = taskView.findViewById(R.id.tvMealTime);
-            TextView stockValueText = taskView.findViewById(R.id.tvStockValue);
+
             CheckBox completeTaskCheckBox = taskView.findViewById(R.id.cbCompleteTask);
 
-            medicineNameText.setText(task.getMedicineName());
+            medicineNameText.setText(task.getTaskName()+" :"+task.getMedicineName());
             mealTimeText.setText(task.getMealTime());
-            stockValueText.setText(task.getQuantity() + " tablets");
 
             // Set up checkbox listener with Firebase integration
+            TextView finalStockValueText = stockValueText;
             completeTaskCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
                     new AlertDialog.Builder(Dashboard.this)
                             .setTitle("Task Completion")
                             .setMessage("Are you sure you want to mark this task as completed?")
                             .setPositiveButton("Yes", (dialog, which) -> {
-                                // Decrease the quantity locally first
-                                int newQuantity = task.getQuantity() - 1;
-                                if (newQuantity >= 0) {
-                                    task.setQuantity(newQuantity);
-                                    tasksRef.child(task.getMedicineName()).child("quantity")
-                                            .setValue(newQuantity)
-                                            .addOnSuccessListener(aVoid -> {
-                                                stockValueText.setText(newQuantity + " tablets");
-                                                if (newQuantity == 0) {
-                                                    targetSection2.removeView(taskView);
+                                // Check if the task name is "Take medicine"
+                                if ("Take medicine".equals(task.getTaskName())) {
+
+                                    // Fetch the medicine ID from the task object
+                                    String medicineId = task.getMedicineId();
+                                    if (medicineId != null) {
+                                        // Fetch the current stock quantity from Firebase
+                                        DatabaseReference medicineRef1 = FirebaseDatabase.getInstance().getReference("users")
+                                                .child(userPhone).child("medicines").child(medicineId).child("quantity");
+
+                                        medicineRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                if (dataSnapshot.exists()) {
+                                                    // Get current stock quantity
+                                                    int currentStock = dataSnapshot.getValue(Integer.class);
+
+                                                    // Ensure stock is available
+                                                    if (currentStock > 0) {
+                                                        // Decrease stock by 1
+                                                        int newQuantity = currentStock - 1;
+
+                                                        // Update quantity in Firebase
+                                                        medicineRef1.setValue(newQuantity)
+                                                                .addOnSuccessListener(aVoid -> {
+                                                                    finalStockValueText.setText(newQuantity + " tablets");
+                                                                    task.setQuantity(newQuantity);  // Update local task quantity
+
+                                                                    // Remove task view if stock is 0
+                                                                    targetSection2.removeView(taskView);
+                                                                    markTaskAsCompleted(task);
+
+                                                                    // Show success message
+                                                                    Toast.makeText(Dashboard.this,
+                                                                            "Task completed! Remaining tablets: " + newQuantity,
+                                                                            Toast.LENGTH_SHORT).show();
+                                                                    completeTaskCheckBox.setChecked(false);
+                                                                })
+                                                                .addOnFailureListener(e -> {
+                                                                    // Handle failure to update quantity
+                                                                    Toast.makeText(Dashboard.this,
+                                                                            "Failed to update quantity: " + e.getMessage(),
+                                                                            Toast.LENGTH_SHORT).show();
+                                                                    completeTaskCheckBox.setChecked(false);
+                                                                });
+                                                    } else {
+                                                        // Handle case where stock is zero
+                                                        Toast.makeText(Dashboard.this, "No tablets left!", Toast.LENGTH_SHORT).show();
+                                                        completeTaskCheckBox.setChecked(false);
+                                                    }
+                                                } else {
+                                                    // Handle case where medicine is not found
+                                                    Toast.makeText(Dashboard.this, "Medicine not found!", Toast.LENGTH_SHORT).show();
+                                                    completeTaskCheckBox.setChecked(false);
                                                 }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                // Handle Firebase read error
                                                 Toast.makeText(Dashboard.this,
-                                                        "Task completed! Remaining tablets: " + newQuantity,
+                                                        "Failed to fetch stock: " + error.getMessage(),
                                                         Toast.LENGTH_SHORT).show();
                                                 completeTaskCheckBox.setChecked(false);
-                                            })
-                                            .addOnFailureListener(e -> {
-                                                Toast.makeText(Dashboard.this,
-                                                        "Failed to update quantity: " + e.getMessage(),
-                                                        Toast.LENGTH_SHORT).show();
-                                                completeTaskCheckBox.setChecked(false);
-                                            });
+                                            }
+                                        });
+                                    } else {
+                                        // Handle case where medicine ID is null
+                                        Toast.makeText(Dashboard.this, "Medicine ID is missing!", Toast.LENGTH_SHORT).show();
+                                        completeTaskCheckBox.setChecked(false);
+                                    }
                                 } else {
-                                    Toast.makeText(Dashboard.this, "No tablets left!", Toast.LENGTH_SHORT).show();
+                                    // Handle case where task name is not "Take medicine"
+                                    Toast.makeText(Dashboard.this, "This task is not for medicine!", Toast.LENGTH_SHORT).show();
                                     completeTaskCheckBox.setChecked(false);
                                 }
                             })
@@ -329,20 +489,22 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             });
 
             targetSection2.addView(taskView);
+
         }
     }
+
     // New method to add predefined tasks based on elderly activities
     private void addPredefinedTasks() {
         // Predefined tasks for morning, afternoon, and night
-        addPredefinedTaskToSection(new Task("Jogging", "morning", "Morning", 1));
-        addPredefinedTaskToSection(new Task("Yoga", "morning", "Morning", 1));
-        addPredefinedTaskToSection(new Task("Exercise", "morning", "Morning", 1));
-        addPredefinedTaskToSection(new Task("Nap", "afternoon", "Afternoon", 1));
-        addPredefinedTaskToSection(new Task("Walk", "afternoon", "Afternoon", 1));
-        addPredefinedTaskToSection(new Task("Lunch", "afternoon", "Afternoon", 1));
-        addPredefinedTaskToSection(new Task("Dinner", "night", "Night", 1));
-        addPredefinedTaskToSection(new Task("Evening Walk", "night", "Night", 1));
-        addPredefinedTaskToSection(new Task("Reading", "night", "Night", 1));
+        addPredefinedTaskToSection(new Task("Jogging", "morning", "Morning", 1, "1","fff"));
+        addPredefinedTaskToSection(new Task("Yoga", "morning", "Morning", 1, "2","fff"));
+        addPredefinedTaskToSection(new Task("Exercise", "morning", "Morning", 1,"3","fff"));
+        addPredefinedTaskToSection(new Task("Nap", "afternoon", "Afternoon", 1,"4","fff"));
+        addPredefinedTaskToSection(new Task("Walk", "afternoon", "Afternoon", 1,"5","fff"));
+        addPredefinedTaskToSection(new Task("Lunch", "afternoon", "Afternoon", 1,"6","fff"));
+        addPredefinedTaskToSection(new Task("Dinner", "night", "Night", 1,"7","fff"));
+        addPredefinedTaskToSection(new Task("Evening Walk", "night", "Night", 1,"8","fff"));
+        addPredefinedTaskToSection(new Task("Reading", "night", "Night", 1,"9","fff"));
     }
 
     private void addPredefinedTaskToSection(Task task) {
@@ -365,6 +527,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         }
 
         if (targetSection != null) {
+            // Check if the task has already been completed today
+            if (isTaskCompleted(task)) {
+                return; // Skip adding the task if already completed
+            }
+
             View taskView = getLayoutInflater().inflate(R.layout.item_predefined_task, targetSection, false);
 
             // Add margin between items
@@ -379,7 +546,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             TextView taskTimeText = taskView.findViewById(R.id.tvPredefinedTaskTime);
             CheckBox completeTaskCheckBox = taskView.findViewById(R.id.cbCompleteTask);
 
-            taskNameText.setText(task.getMedicineName());
+            taskNameText.setText(task.getTaskName());
             taskTimeText.setText(task.getMealTime());
 
             // Set up checkbox listener
@@ -392,6 +559,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                             .setPositiveButton("Yes", (dialog, which) -> {
                                 // Remove the task from the target section
                                 targetSection.removeView(taskView);
+                                // Mark the task as completed
+                                markTaskAsCompleted(task);
                                 // Show a toast message
                                 Toast.makeText(Dashboard.this, "Task completed!", Toast.LENGTH_SHORT).show();
                             })
@@ -405,6 +574,77 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
             targetSection.addView(taskView);
         }
+    }
+
+    private void markTaskAsCompleted(Task task) {
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        String taskKey = COMPLETED_TASK_PREFIX + task.getMedicineId();
+        String completionDateKey = COMPLETION_DATE_PREFIX + task.getMedicineId();
+
+        // Store the current date as the completion date
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        editor.putString(completionDateKey, currentDate);
+
+        // Mark the task as completed
+        editor.putBoolean(taskKey, true);
+
+        editor.apply(); // Apply changes to SharedPreferences
+    }
+
+    private boolean isTaskCompleted(Task task) {
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+        String taskKey = COMPLETED_TASK_PREFIX + task.getMedicineId();
+        String completionDateKey = COMPLETION_DATE_PREFIX + task.getMedicineId();
+
+        String storedDate = preferences.getString(completionDateKey, null);
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+        // If the task was completed on a different date, mark it as incomplete again
+        if (storedDate != null && !storedDate.equals(currentDate)) {
+            // The task was completed on a previous day, so we reset it to incomplete for today
+            preferences.edit().putBoolean(taskKey, false).apply();
+            return false;
+        }
+
+        return preferences.getBoolean(taskKey, false); // Return whether the task was completed
+    }
+
+    private void handleNewDay() {
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+        // Iterate through all tasks and check if they should be marked incomplete for the new day
+        Map<String, ?> allPrefs = preferences.getAll();
+        for (Map.Entry<String, ?> entry : allPrefs.entrySet()) {
+            String key = entry.getKey();
+
+            // Check if the key is a completion date key (based on the format)
+            if (key.startsWith(COMPLETION_DATE_PREFIX)) {
+                String storedDate = (String) entry.getValue();
+
+                // If the stored date is not today's date, reset the task to incomplete
+                if (!currentDate.equals(storedDate)) {
+                    String medicineId = key.substring(COMPLETION_DATE_PREFIX.length());
+                    String taskKey = COMPLETED_TASK_PREFIX + medicineId;
+
+                    preferences.edit().putBoolean(taskKey, false).apply();
+                }
+            }
+        }
+    }
+
+
+
+    private void resetTasksForNewDay() {
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        // Reset all completed task flags for the new day (for example, at midnight)
+        editor.clear(); // Alternatively, you can reset specific task flags if needed
+        editor.apply();
     }
 
     private void setupClickListeners() {
@@ -470,28 +710,53 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     // Task model class
     public static class Task {
         private String medicineName;
+        private String medicineId;
         private String time;
+
         private String mealTime;
         private int quantity;
+        private String taskName;
+
+        public Task() {
+            this.medicineName = "Unknown Medicine";  // Set default value
+        }
 
         // Required empty constructor for Firebase
-        public Task() {}
+        public Task(String medicineName) {
+            this.medicineName = medicineName;
+        }
 
         // Constructor for predefined tasks
-        public Task(String medicineName, String time, String mealTime, int quantity) {
-            this.medicineName = medicineName;
+        public Task(String taskname, String time, String mealTime, int quantity, String medicineId,String medicineName) {
+            this.taskName = taskname;
             this.time = time;
             this.mealTime = mealTime;
             this.quantity = quantity;
+            this.medicineId = medicineId;
+            this.medicineName = medicineName;
         }
 
-        // Getters and setters
+        // Getters and setter
+        //
+        // s
+
         public String getMedicineName() {
             return medicineName;
         }
-
-        public void setMedicineName(String medicineName) {
+        public void setMedicineName() {
             this.medicineName = medicineName;
+        }
+
+        public String getMedicineId() {
+            return medicineId;
+        }
+
+        public String getTaskName() {
+            return taskName;
+        }
+
+        public void setTaskName(String taskName) {
+            this.taskName = taskName;
         }
 
         public String getTime() {
@@ -517,5 +782,15 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         public void setQuantity(int quantity) {
             this.quantity = quantity;
         }
+
+
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Call the handleNewDay function to check and update tasks for the new day
+        handleNewDay();
+    }
+
 }

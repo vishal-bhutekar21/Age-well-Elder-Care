@@ -10,12 +10,46 @@
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarexercise"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary"
-            app:title="Workout Tracker"
-            app:titleTextColor="@android:color/white"/>
+            android:elevation="4dp"
+
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- Menu Icon (Hamburger) -->
+            <ImageView
+                android:id="@+id/ivMenu"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_menu"
+                android:contentDescription="Menu"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Title in Center -->
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Workout Tracker "
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Notification Bell -->
+
+
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -48,9 +82,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Welcome to Today's Exercises"
-                        android:textSize="24sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
-                        android:textColor="@color/accent"/>
+                        android:textColor="@color/primary"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -68,7 +102,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_send"
+                            android:drawableStart="@drawable/clock"
                             android:drawablePadding="8dp"
                             android:text="Take your time"
                             android:textSize="18sp"
@@ -77,7 +111,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_send"
+                            android:drawableStart="@drawable/glass"
                             android:drawablePadding="8dp"
                             android:text="Keep water nearby"
                             android:textSize="18sp"
@@ -86,7 +120,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_send"
+                            android:drawableStart="@drawable/heart"
                             android:drawablePadding="8dp"
                             android:text="Stop if you feel any discomfort"
                             android:textSize="18sp"/>
@@ -163,6 +197,8 @@
         android:theme="@style/Theme.AgeWellSuper"
         android:layout_margin="16dp"
         android:text="Add Exercise"
+        android:textColor="@color/primary"
+        app:iconTint="@color/primary"
         app:icon="@drawable/ic_add"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

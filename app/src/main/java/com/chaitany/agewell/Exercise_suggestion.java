@@ -73,7 +73,7 @@ public class Exercise_suggestion extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        Toolbar toolbar = findViewById(R.id.toolbarexercise);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         exerciseRecyclerView = findViewById(R.id.exerciseRecyclerView);

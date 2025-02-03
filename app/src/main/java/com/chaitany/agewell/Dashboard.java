@@ -362,7 +362,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
             CheckBox completeTaskCheckBox = taskView.findViewById(R.id.cbCompleteTask);
 
-            medicineNameText.setText(task.getTaskName()+" :"+task.getMedicineName());
+            medicineNameText.setText(task.getTaskName() + " :" + task.getMedicineName());
             mealTimeText.setText(task.getMealTime());
 
             // Set up checkbox listener with Firebase integration

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -6,24 +5,57 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/hospital_name"
-        android:layout_width="wrap_content"
+        android:id="@+id/nameTextView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hospital Name"
-        android:textSize="18sp"
-        android:layout_marginBottom="8dp"/>
+        android:text="Name"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/hospital_address"
-        android:layout_width="wrap_content"
+        android:id="@+id/displayNameTextView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hospital Address"
-        android:textSize="14sp"
-        android:layout_marginBottom="16dp"/>
+        android:text="Display Name" />
 
+    <TextView
+        android:id="@+id/latTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Latitude" />
+
+    <TextView
+        android:id="@+id/lonTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Longitude" />
+
+    <TextView
+        android:id="@+id/placeIdTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Place ID" />
+
+    <TextView
+        android:id="@+id/addressTypeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Address Type" />
+
+    <TextView
+        android:id="@+id/importanceTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Importance" />
+
+    <TextView
+        android:id="@+id/boundingBoxTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bounding Box" />
     <Button
-        android:id="@+id/start_navigation_button"
+        android:id="@+id/startNavigatingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Navigating"/>
+        android:text="Start Navigating" />
+
 </LinearLayout>

@@ -103,6 +103,7 @@
            android:layout_height="wrap_content"
            android:textSize="17dp"
            android:text="Login Now"
+           android:paddingHorizontal="30dp"
            android:drawableRight="@drawable/slogin"
            android:drawablePadding="50dp"
            android:drawableTint="@color/white"

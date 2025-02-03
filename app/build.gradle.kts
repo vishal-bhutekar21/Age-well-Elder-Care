@@ -60,4 +60,8 @@ dependencies {
     implementation ("com.google.android.material:material:1.8.0")
     implementation ("com.squareup.picasso:picasso:2.8")
     implementation ("com.facebook.shimmer:shimmer:0.5.0")
+
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation ("org.json:json:20210307")
+
 }

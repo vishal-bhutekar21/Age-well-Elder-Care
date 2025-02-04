@@ -1,17 +1,13 @@
 package com.chaitany.agewell;
 
-
 import android.content.Context;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.OnboardingViewHolder> {
 
@@ -39,6 +35,9 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
         holder.imageView.setImageResource(images[position]);
         holder.titleText.setText(titles[position]);
         holder.descriptionText.setText(descriptions[position]);
+
+        // Improve performance by enabling hardware acceleration
+        holder.itemView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
     }
 
     @Override

@@ -9,8 +9,7 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_marginTop="40dp" />
+        android:layout_height="350dp"/>
 
     <TextView
         android:id="@+id/titleText"
@@ -20,7 +19,7 @@
         android:textStyle="bold"
         android:textColor="#0F766E"
         android:gravity="center"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="5dp" />
 
     <TextView
         android:id="@+id/descriptionText"

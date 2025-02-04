@@ -13,13 +13,14 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_marginTop="50dp"
         android:src="@drawable/app_heading"/>
 
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="525dp"
+        android:layout_height="500dp"
         android:background="#F0FDFA"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/buttonLayout" />

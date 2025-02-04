@@ -19,21 +19,30 @@ public class OnBoardingActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
 
     private final int[] images = {
-            R.drawable.imgonboard1,
-            R.drawable.imgonboard2,
-            R.drawable.imgonboard3
+            R.drawable.img_onboard2,
+            R.drawable.img_onboard1,
+            R.drawable.img_onboard4,
+            R.drawable.img_onboard3,
+            R.drawable.img_onboard5,
+            R.drawable.img_onboard6
     };
 
     private final String[] titles = {
-            "Help at Your Fingertips!",
+            "A Smarter Way to Care for Those Who Matter Most!",
+           "Help at Your Fingertips!",
+            "Find the Nearest Hospital Instantly!",
             "Never Miss a Dose or Checkup!",
-            "A Smarter Way to Care for Those Who Matter Most!"
+            "Stay Active & Manage Your Day with Ease!",
+            "Stay Connected with Loved Ones!"
     };
 
     private final String[] descriptions = {
+            "Smart technology meets heartfelt care – ensuring safety, health, and well-being for seniors, effortlessly.",
             "One-tap SOS alert to caregivers & real-time emergency support.",
+            "Locate nearby hospitals and get turn-by-turn navigation in emergencies.",
             "Smart medication reminders, BMI tracking, and doctor visit alerts.",
-            "Smart technology meets heartfelt care – ensuring safety, health, and well-being for seniors, effortlessly."
+            "Personalized exercise routines, meal plans, and daily task management.",
+            "Community chat, and social groups to combat loneliness."
     };
 
     @Override
@@ -82,7 +91,7 @@ public class OnBoardingActivity extends AppCompatActivity {
 
     // Change navigation bar color
     private void finishOnboarding() {
-        startActivity(new Intent(this, Login.class));
+        startActivity(new Intent(this, GetStartedActivity.class));
         finish();
     }
 }

@@ -43,8 +43,8 @@ class Splash : AppCompatActivity() {
                 PERMISSIONS_REQUEST_CODE
             )
         } else {
-            // If permissions are already granted, check login status
-            checkLoginStatus()
+            // If permissions are already granted, check onboarding and login status
+            checkOnboardingStatus()
         }
 
         // Setup window insets for edge-to-edge view
@@ -72,22 +72,38 @@ class Splash : AppCompatActivity() {
         return true
     }
 
+    // Check if onboarding was shown, then check login status
+    private fun checkOnboardingStatus() {
+        val appPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val isFirstTime = appPreferences.getBoolean("isFirstTime", true)
+
+        val handler = Handler()
+        handler.postDelayed({
+            val intent = if (isFirstTime) {
+                // First time user, show OnBoardingActivity
+                Intent(this, OnBoardingActivity::class.java)
+            } else {
+                checkLoginStatus() // Proceed with login check
+                return@postDelayed
+            }
+            startActivity(intent)
+            finish()
+        }, 2000) // 2-second delay
+    }
+
     // Check the login status from SharedPreferences
     private fun checkLoginStatus() {
         val isLoggedIn = sharedPreferences.getBoolean("isLogged", false)
 
-        val handler = Handler()
-        handler.postDelayed({
-            val intent = if (isLoggedIn) {
-                // If user is logged in, navigate to the main activity/dashboard
-                Intent(this, Dashboard::class.java)
-            } else {
-                // If not logged in, navigate to LoginActivity
-                Intent(this, Login::class.java)
-            }
-            startActivity(intent)
-            finish() // Finish the SplashActivity so it won't stay in the back stack
-        }, 2000) // 2000ms delay for splash screen
+        val intent = if (isLoggedIn) {
+            // If user is logged in, navigate to the main activity/dashboard
+            Intent(this, Dashboard::class.java)
+        } else {
+            // If not logged in, navigate to LoginActivity
+            Intent(this, Login::class.java)
+        }
+        startActivity(intent)
+        finish()
     }
 
     // Handle permission request result
@@ -100,11 +116,10 @@ class Splash : AppCompatActivity() {
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
             if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 // All permissions granted
-                checkLoginStatus()
+                checkOnboardingStatus()
             } else {
                 // Some permissions denied, show message to the user
                 Toast.makeText(this, "Permissions are required to use the app", Toast.LENGTH_LONG).show()
-                // Optionally, you can finish the activity or take further action
                 finish() // Forcibly close the splash activity
             }
         }

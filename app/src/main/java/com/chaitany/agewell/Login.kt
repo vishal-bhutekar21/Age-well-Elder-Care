@@ -1,9 +1,9 @@
 package com.chaitany.agewell
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.widget.Button
@@ -12,11 +12,9 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
+import com.example.yourapp.utils.UserPreferences
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.example.yourapp.utils.UserPreferences
-import com.google.android.material.textfield.TextInputEditText
 
 class Login : AppCompatActivity() {
 
@@ -33,8 +31,6 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-
-
         // Initialize views
         mobileEditText = findViewById(R.id.etMobileNumber)
         passwordEditText = findViewById(R.id.etPassword)
@@ -44,24 +40,10 @@ class Login : AppCompatActivity() {
         // Initialize Firebase Database reference
         databaseReference = FirebaseDatabase.getInstance().reference.child("users")
 
-
-        val forgot_pass=findViewById<TextView>(R.id.tv_forgot_password)
-        forgot_pass.setOnClickListener {
-            val intent = Intent(this, ForgotPassword::class.java)
-            startActivity(intent)
-        }
-        val cbShowPassword = findViewById<CheckBox>(R.id.cbShowPassword)
-
-        cbShowPassword.setOnCheckedChangeListener { _, isChecked ->
-            togglePasswordVisibility(passwordEditText, isChecked)
-        }
         // Initialize ProgressDialog
         progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Logging in...")
         progressDialog.setCancelable(false)
-
-        // Initialize UserPreferences for saving mobile number
-        userPreferences = UserPreferences(this)
 
         // Login button click listener
         loginButton.setOnClickListener {
@@ -82,6 +64,17 @@ class Login : AppCompatActivity() {
             val intent = Intent(this, SignUp::class.java)
             startActivity(intent)
             finish()
+        }
+
+        val forgot_pass = findViewById<TextView>(R.id.tv_forgot_password)
+        forgot_pass.setOnClickListener {
+            val intent = Intent(this, ForgotPassword::class.java)
+            startActivity(intent)
+        }
+
+        val cbShowPassword = findViewById<CheckBox>(R.id.cbShowPassword)
+        cbShowPassword.setOnCheckedChangeListener { _, isChecked ->
+            togglePasswordVisibility(passwordEditText, isChecked)
         }
     }
 
@@ -113,7 +106,7 @@ class Login : AppCompatActivity() {
 
                         Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
 
-                        // Proceed to next activity
+                        // Proceed to next activity (Dashboard)
                         val intent = Intent(this, Dashboard::class.java)
                         startActivity(intent)
                         finish()
@@ -172,5 +165,4 @@ class Login : AppCompatActivity() {
 
         return isValid
     }
-
 }

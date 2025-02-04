@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Toast
@@ -28,26 +29,8 @@ class Splash : AppCompatActivity() {
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("UserLogin", Context.MODE_PRIVATE)
 
-        // Check for necessary permissions
-        if (!hasRequiredPermissions()) {
-            // Request permissions if not granted
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    Manifest.permission.INTERNET,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.SEND_SMS,
-                    Manifest.permission.CALL_PHONE,
-                    Manifest.permission.WRITE_CALENDAR,
-                    Manifest.permission.READ_CALENDAR
-                ),
-                PERMISSIONS_REQUEST_CODE
-            )
-        } else {
-            // If permissions are already granted, check onboarding and login status
-            checkOnboardingStatus()
-        }
+        requestAllPermissions()  // Request all permissions at once
+
 
         // Setup window insets for edge-to-edge view
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -57,8 +40,8 @@ class Splash : AppCompatActivity() {
         }
     }
 
-    // Check if all required permissions are granted
-    private fun hasRequiredPermissions(): Boolean {
+    // Request all required permissions
+    private fun requestAllPermissions() {
         val permissions = arrayOf(
             Manifest.permission.INTERNET,
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -69,14 +52,19 @@ class Splash : AppCompatActivity() {
             Manifest.permission.READ_CALENDAR,
             Manifest.permission.VIBRATE,
             Manifest.permission.RECEIVE_BOOT_COMPLETED
-
         )
-        for (permission in permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                return false
-            }
+
+        if (permissions.any { ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED }) {
+            // Request permissions if not granted
+            ActivityCompat.requestPermissions(
+                this,
+                permissions,
+                PERMISSIONS_REQUEST_CODE
+            )
+        } else {
+            // Permissions already granted, check onboarding and login status
+            checkOnboardingStatus()
         }
-        return true
     }
 
     // Check if onboarding was shown, then check login status
@@ -131,7 +119,6 @@ class Splash : AppCompatActivity() {
             }
         }
     }
-
 
 
 }

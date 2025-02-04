@@ -624,7 +624,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         layoutHealthMonitor.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, ActivityAppointment.class)));
         layoutmealplan.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, MealPlanner.class)));
         layout_exercise.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, Exercise_suggestion.class)));
-        //layout_hospital.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, HospitalActivity.class)));
+        layout_hospital.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, HospitalActivity.class)));
     }
 
     @Override

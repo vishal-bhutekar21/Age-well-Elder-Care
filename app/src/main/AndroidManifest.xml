@@ -60,6 +60,10 @@
             android:exported="false"
             android:theme="@style/Theme.AgeWellSuper" />
         <activity
+            android:name=".OnBoardingActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AgeWellSuper" />
+        <activity
             android:name=".EmergencyContact"
             android:exported="true"
             android:theme="@style/Theme.AgeWellSuper" />

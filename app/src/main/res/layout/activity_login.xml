@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -7,6 +7,12 @@
     android:gravity="center"
     android:background="#F5F5F5">
 
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+       android:gravity="center"
+       >
     <!-- App Logo or Image (Optional) -->
     <ImageView
         android:id="@+id/appLogo"
@@ -24,13 +30,15 @@
         android:textStyle="normal"
         android:textColor="@color/primary"
         android:textSize="30dp"
+        android:fontFamily="sans-serif-condensed-medium"
         android:layout_margin="10dp"
         />
     <com.google.android.material.textfield.TextInputLayout
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+       >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etMobileNumber"
@@ -38,14 +46,18 @@
             android:layout_height="wrap_content"
             android:hint="Mobile"
             android:inputType="numberDecimal"
-            android:maxLength="50"/>
+            android:maxLength="50"
+            android:drawableLeft="@drawable/stelephone"
+            android:drawableTint="@color/gray"
+            android:drawablePadding="10dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp">
+        android:layout_marginBottom="5dp"
+       >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPassword"
@@ -53,38 +65,56 @@
             android:layout_height="wrap_content"
             android:hint="Password"
             android:inputType="textPersonName"
-            android:maxLength="50"/>
+            android:maxLength="50"
+            android:drawableLeft="@drawable/slock"
+            android:drawableTint="@color/gray"
+            android:drawablePadding="10dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <CheckBox
-        android:id="@+id/cbShowPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show Password"
-        android:layout_gravity="start"
-        android:padding="8dp"/>
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:layout_gravity="center_horizontal"
+           >
+           <CheckBox
+               android:id="@+id/cbShowPassword"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Show Password"
+               android:layout_gravity="start"
+               android:padding="8dp"/>
 
-    <TextView
-        android:id="@+id/tv_forgot_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Forgot Password ?"
-        android:textColor="@color/primary"
-        android:layout_margin="10dp"
-        android:textStyle="italic"
-        android:textAlignment="center"
-        />
-    <Button
-        android:id="@+id/btnLoginNow"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Login Now"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="@color/primary"
-        android:layout_marginBottom="5dp"
-        android:padding="16dp" />
+           <TextView
+               android:id="@+id/tv_forgot_password"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:text="Forgot Password ?"
+               android:textColor="@color/primary"
+               android:layout_margin="10dp"
+               android:textStyle="italic"
+               android:textAlignment="textEnd"
+               />
+       </LinearLayout>
 
-    <TextView
+       <Button
+           android:id="@+id/btnLoginNow"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:textSize="17dp"
+           android:text="Login Now"
+           android:paddingHorizontal="30dp"
+           android:drawableRight="@drawable/slogin"
+           android:drawablePadding="50dp"
+           android:drawableTint="@color/white"
+            android:textColor="#FFFFFF"
+           android:backgroundTint="@color/primary"
+       android:layout_marginBottom="5dp"
+       android:padding="16dp"
+           />
+
+
+       <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Dont have an account ? Sign Up"
@@ -104,3 +134,4 @@
         android:padding="16dp" />
 
 </LinearLayout>
+</ScrollView>

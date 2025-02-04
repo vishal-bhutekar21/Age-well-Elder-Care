@@ -12,6 +12,7 @@ public class StarRatingView extends LinearLayout {
     private final List<ImageView> stars = new ArrayList<>();
     private int rating = 0;
     private OnRatingChangeListener listener;
+    private boolean isClickable = true; // Flag to control clickability
 
     public interface OnRatingChangeListener {
         void onRatingChanged(int rating);
@@ -38,7 +39,11 @@ public class StarRatingView extends LinearLayout {
             star.setPadding(padding, padding, padding, padding);
 
             final int starIndex = i;
-            star.setOnClickListener(v -> setRating(starIndex + 1));
+            star.setOnClickListener(v -> {
+                if (isClickable) { // Check if clickable
+                    setRating(starIndex + 1);
+                }
+            });
 
             addView(star);
             stars.add(star);
@@ -74,6 +79,10 @@ public class StarRatingView extends LinearLayout {
 
     public void setOnRatingChangeListener(OnRatingChangeListener listener) {
         this.listener = listener;
+    }
+
+    public void setClickable(boolean clickable) {
+        this.isClickable = clickable; // Set the clickability flag
     }
 
     private int dpToPx(int dp) {

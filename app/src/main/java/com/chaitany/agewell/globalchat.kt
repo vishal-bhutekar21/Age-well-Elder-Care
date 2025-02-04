@@ -41,7 +41,7 @@ class globalchat : AppCompatActivity() {
         // Initialize Firebase
         database = FirebaseDatabase.getInstance().getReference("chats")
 
-        val backButton: ImageView = findViewById(R.id.btn_back)
+        val backButton: ImageView = findViewById(R.id.ivMenu)
         backButton.setOnClickListener {
             onBackPressed()  // Navigate back when clicked
         }

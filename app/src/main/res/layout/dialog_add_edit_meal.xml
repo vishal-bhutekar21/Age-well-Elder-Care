@@ -90,6 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Cancel"
+
                     android:drawableLeft="@drawable/ic_send"
                     android:drawableTint="@color/white"
                     android:layout_gravity="start"

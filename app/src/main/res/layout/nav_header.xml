@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="250dp"
     android:layout_height="200dp"
-    android:background="@color/primary"
+    android:background="@color/white"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp">
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="User Name"
-        android:textColor="@android:color/white"
+        android:textColor="@color/primary"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginTop="8dp" />
@@ -29,7 +29,16 @@
         android:id="@+id/mobile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:text="XXXX XX XXXX"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="14sp" />
+    <View
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/primary">
+
+    </View>
+
 </LinearLayout>

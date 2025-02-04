@@ -55,7 +55,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     Integer stock;
 
     private LinearLayout layoutEmergencyContact, layoutMedicalStock, layoutHealthMonitor, layoutmealplan,
-            layout_bmi_index, layout_elder_connect, layout_exercise;
+            layout_bmi_index, layout_elder_connect, layout_exercise,layout_hospital;
     private LinearLayout morningTasksLayout, afternoonTasksLayout, nightTasksLayout;
     private ImageView menuButton;
     private DatabaseReference tasksRef;
@@ -102,6 +102,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         layoutmealplan = findViewById(R.id.mealplans);
         layout_elder_connect = findViewById(R.id.layout_elder_connect);
         layout_exercise = findViewById(R.id.layoutexercise);
+        layout_hospital=findViewById(R.id.nearbyhospital);
 
         // Initialize task section layouts
         morningTasksLayout = findViewById(R.id.morningTasksLayout);
@@ -269,40 +270,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     }
 
 
-    /**
-     * Fetches medicine stock based on the given medicineId
-     */
-//    private int fetchMedicineStock(String medicineId) {
-//
-//        DatabaseReference medicineRef = FirebaseDatabase.getInstance().getReference("users")
-//                .child(userPhone).child("medicines");
-//
-//        medicineRef.orderByChild("id").equalTo(medicineId)
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        if (dataSnapshot.exists()) {
-//                            for (DataSnapshot medicineSnapshot : dataSnapshot.getChildren()) {
-//                                String name = medicineSnapshot.child("name").getValue(String.class);
-//                                Integer quantity = medicineSnapshot.child("quantity").getValue(Integer.class);
-//                                stock=quantity;
-//
-//                                Log.d("MedicineStock", "Medicine Name: " + name);
-//                                Log.d("MedicineStock", "Stock for medicine " + medicineId + " is: " + quantity);
-//
-//                            }
-//                        } else {
-//                            Log.d("MedicineStock", "No medicine found for ID: " + medicineId);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//                        Log.e("MedicineStock", "Failed to fetch stock: " + error.getMessage());
-//                    }
-//                });
-//        return stock;
-//    }
 
 
 
@@ -395,7 +362,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
             CheckBox completeTaskCheckBox = taskView.findViewById(R.id.cbCompleteTask);
 
-            medicineNameText.setText(task.getTaskName()+" :"+task.getMedicineName());
+            medicineNameText.setText(task.getTaskName() + " :" + task.getMedicineName());
             mealTimeText.setText(task.getMealTime());
 
             // Set up checkbox listener with Firebase integration
@@ -657,6 +624,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         layoutHealthMonitor.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, ActivityAppointment.class)));
         layoutmealplan.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, MealPlanner.class)));
         layout_exercise.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, Exercise_suggestion.class)));
+        layout_hospital.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, HospitalActivity.class)));
     }
 
     @Override

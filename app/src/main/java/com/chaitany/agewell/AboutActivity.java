@@ -52,19 +52,19 @@ public class AboutActivity extends AppCompatActivity implements NavigationView.O
 
     private void setSocialMediaLinks() {
         // Developer 1
-        findViewById(R.id.instagram1).setOnClickListener(v -> openUrl("https://www.instagram.com/developer1"));
-        findViewById(R.id.github1).setOnClickListener(v -> openUrl("https://www.github.com/developer1"));
-        findViewById(R.id.linkedin1).setOnClickListener(v -> openUrl("https://www.linkedin.com/in/developer1"));
+        findViewById(R.id.instagram1).setOnClickListener(v -> openUrl("https://www.instagram.com/vishal_b__21/"));
+        findViewById(R.id.github1).setOnClickListener(v -> openUrl("https://github.com/vishal-bhutekar21"));
+        findViewById(R.id.linkedin1).setOnClickListener(v -> openUrl("https://www.linkedin.com/in/vishal-bhutekar-17552b283/"));
 
         // Developer 2
-        findViewById(R.id.instagram2).setOnClickListener(v -> openUrl("https://www.instagram.com/developer2"));
-        findViewById(R.id.github2).setOnClickListener(v -> openUrl("https://www.github.com/developer2"));
-        findViewById(R.id.linkedin2).setOnClickListener(v -> openUrl("https://www.linkedin.com/in/developer2"));
+        findViewById(R.id.instagram2).setOnClickListener(v -> openUrl("https://www.instagram.com/chaitanyk_07/"));
+        findViewById(R.id.github2).setOnClickListener(v -> openUrl("https://github.com/chaitanykakde"));
+        findViewById(R.id.linkedin2).setOnClickListener(v -> openUrl("https://www.linkedin.com/in/chaitany-kakde-2a3ba62a8/"));
 
         // Developer 3
-        findViewById(R.id.instagram3).setOnClickListener(v -> openUrl("https://www.instagram.com/developer3"));
-        findViewById(R.id.github3).setOnClickListener(v -> openUrl("https://www.github.com/developer3"));
-        findViewById(R.id.linkedin3).setOnClickListener(v -> openUrl("https://www.linkedin.com/in/developer3"));
+        findViewById(R.id.instagram3).setOnClickListener(v -> openUrl("https://www.instagram.com/satwik_mahajan_1"));
+        findViewById(R.id.github3).setOnClickListener(v -> openUrl("https://github.com/SatwikMahajan01"));
+        findViewById(R.id.linkedin3).setOnClickListener(v -> openUrl("https://www.linkedin.com/in/satwik-mahajan-173766218/ "));
     }
 
     private void openUrl(String url) {

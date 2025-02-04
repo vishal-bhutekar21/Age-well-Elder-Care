@@ -7,53 +7,55 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chaitany.agewell.Feedback;
+import com.chaitany.agewell.R;
+import com.chaitany.agewell.StarRatingView;
+
 import java.util.List;
 
 public class FeedbackAdapter extends RecyclerView.Adapter<FeedbackAdapter.FeedbackViewHolder> {
 
     private List<Feedback> feedbackList;
+    private boolean isClickable; // Flag to control clickability
 
-    public FeedbackAdapter(List<Feedback> feedbackList) {
+    public FeedbackAdapter(List<Feedback> feedbackList, boolean isClickable) {
         this.feedbackList = feedbackList;
+        this.isClickable = isClickable; // Set the flag
     }
 
     @Override
     public FeedbackViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // Inflate the layout for each feedback item
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.feedback_list_item, parent, false);
         return new FeedbackViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(FeedbackViewHolder holder, int position) {
-        // Get the feedback item at the current position
         Feedback feedback = feedbackList.get(position);
+        holder.userNameText.setText(feedback.getUserName());
+        holder.commentText.setText(feedback.getComment());
+        holder.starRatingView.setRating(feedback.getRating());
 
-        // Set the user's name and comment
-        holder.userNameText.setText(feedback.getUserName()); // Display user's name
-        holder.commentText.setText(feedback.getComment()); // Display comment
-
-        // Set the star rating
-        holder.starRatingView.setRating(feedback.getRating()); // Set the star rating
+        // Set clickability based on the flag
+        holder.starRatingView.setClickable(isClickable);
+        holder.starRatingView.setFocusable(isClickable);
     }
 
     @Override
     public int getItemCount() {
-        return feedbackList.size(); // Return the total number of feedback items
+        return feedbackList.size();
     }
 
     public static class FeedbackViewHolder extends RecyclerView.ViewHolder {
-
-        TextView commentText; // TextView for comment
-        TextView userNameText; // TextView for user's name
-        StarRatingView starRatingView; // Custom view for star rating
+        TextView commentText;
+        TextView userNameText;
+        StarRatingView starRatingView;
 
         public FeedbackViewHolder(View itemView) {
             super(itemView);
-            // Initialize the views
-            commentText = itemView.findViewById(R.id.feedback_comment); // TextView for comment
-            userNameText = itemView.findViewById(R.id.feedback_user_name); // TextView for user's name
-            starRatingView = itemView.findViewById(R.id.feedback_star_rating); // Initialize the StarRatingView
+            commentText = itemView.findViewById(R.id.feedback_comment);
+            userNameText = itemView.findViewById(R.id.feedback_user_name);
+            starRatingView = itemView.findViewById(R.id.feedback_star_rating);
         }
     }
 }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -79,9 +80,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         TextView phoneTextView;
         Chip categoryChip;
         Chip priorityChip;
-        ImageButton callButton; // Change to ImageButton
-        ImageButton editButton; // Change to ImageButton
-        ImageButton deleteButton; // Change to ImageButton
+        MaterialButton callButton; // Change to ImageButton
+        MaterialButton editButton; // Change to ImageButton
+        MaterialButton deleteButton; // Change to ImageButton
         MaterialCardView cardView;
 
         public ContactViewHolder(View itemView) {

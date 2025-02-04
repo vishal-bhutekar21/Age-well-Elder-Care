@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
     android:gravity="center"
@@ -15,37 +16,57 @@
         >
 
         <ImageView
-            android:layout_width="100dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/suser"
+            app:tint="@color/primary" />
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/app_heading"
+            android:text="Create Account"
+            android:textAlignment="center"
+            android:textStyle="normal"
+            android:textColor="@color/primary"
+            android:textSize="20dp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:layout_margin="5dp"
             />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SignUp"
+            android:text="Join us to start your wellness journey"
             android:textAlignment="center"
             android:textStyle="normal"
-            android:textColor="@color/primary"
-            android:textSize="30dp"
+            android:textColor="@color/gray"
+            android:textSize="11dp"
+            android:fontFamily="sans-serif"
             android:layout_margin="5dp"
             />
     <!-- Name Field -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nameInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/nameField"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nameInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Full Name"
-            android:inputType="textPersonName"
-            android:maxLength="50"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginBottom="16dp"
+            android:drawableTint="@color/gray"
+         >
 
-    <!-- Mobile Field -->
+            <com.google.android.material.textfield.TextInputEditText
+
+                android:id="@+id/nameField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Full Name"
+                android:inputType="textPersonName"
+                android:maxLength="50"
+                android:drawableLeft="@drawable/sperson"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/gray"
+                android:paddingStart="16dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <!-- Mobile Field -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/mobileInputLayout"
         android:layout_width="match_parent"
@@ -57,6 +78,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Mobile Number"
+            android:drawableLeft="@drawable/stelephone"
+            android:drawablePadding="10dp"
             android:inputType="phone"
             android:maxLength="10"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -73,6 +96,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Age"
+            android:drawableLeft="@drawable/calendar"
+            android:drawableTint="@color/gray"
+            android:drawablePadding="10dp"
             android:inputType="number"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,6 +109,10 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:hint="Gender"
+            app:startIconDrawable="@drawable/sperson"
+
+            app:endIconMode="dropdown_menu"
+            android:drawableTint="@color/gray"
             android:paddingVertical="4dp">
 
             <AutoCompleteTextView
@@ -90,11 +120,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="16dp"
+                android:paddingStart="48dp"
                 android:textSize="16sp"
                 android:background="?android:attr/editTextBackground"
                 android:inputType="none"
                 android:focusable="false"/>
         </com.google.android.material.textfield.TextInputLayout>
+
 
 
         <!-- Location Field -->
@@ -109,6 +141,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Location"
+            android:drawableLeft="@drawable/slocation"
+            android:drawablePadding="10dp"
             android:inputType="text"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -124,6 +158,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
+            android:drawableLeft="@drawable/slock"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/gray"
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -140,7 +177,11 @@
         android:id="@+id/signupButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:theme="@style/Theme.AgeWellSuper"
         android:text="Sign Up"
+        android:drawableRight="@drawable/slogin"
+        android:drawableTint="@color/white"
+        android:drawablePadding="20dp"
         android:layout_margin="10dp"/>
 
 

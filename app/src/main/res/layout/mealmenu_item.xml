@@ -5,103 +5,81 @@
     android:layout_height="wrap_content"
     app:cardCornerRadius="12dp"
     app:cardElevation="8dp"
-    android:layout_margin="5dp">
+    android:layout_margin="8dp"
+    android:background="@color/white">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical"
+android:padding="10dp">
+<!-- Day Spinner -->
+<Spinner
+    android:id="@+id/spinnerDay"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:layout_marginTop="16dp"
+    android:entries="@array/days_of_week"
+    android:padding="12dp"
+/>
+
+<!-- Meal Name -->
+<TextView
+    android:id="@+id/tvMeal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Breakfast"
+    android:layout_marginLeft="10dp"
+    android:textSize="22sp"
+android:fontFamily="sans-serif-condensed"
+android:textStyle="bold"
+android:textColor="@color/black"
+android:layout_marginBottom="8dp" />
+
+<!-- Notes -->
+<TextView
+    android:id="@+id/tvNotes"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:text="Avoid oily food."
+    android:textSize="16sp"
+    android:fontFamily="sans-serif-condensed-light"
+    android:textColor="@android:color/holo_red_dark"
+    android:layout_marginBottom="12dp" />
+
+<!-- Buttons Row -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_marginBottom="12dp">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnEdit"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@android:color/white">
+        android:layout_weight="1"
+        android:text="Edit"
+        app:cornerRadius="8dp"
+        android:backgroundTint="@color/primary"
+        android:textColor="@android:color/white"
+        android:layout_marginEnd="8dp"
+        android:padding="12dp" />
 
-        <!-- Day Spinner -->
-        <Spinner
-            android:id="@+id/spinnerDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:entries="@array/days_of_week" />
-
-        <!-- Meal Name -->
-        <TextView
-            android:id="@+id/tvMeal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Breakfast"
-            android:textSize="18sp"
-            android:fontFamily="sans-serif-condensed"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Notes -->
-        <TextView
-            android:id="@+id/tvNotes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Avoid oily food."
-            android:textSize="16sp"
-
-            android:fontFamily="sans-serif-condensed-light"
-            android:textColor="@android:color/holo_red_dark"
-            android:layout_marginBottom="12dp" />
-
-        <!-- Buttons Row -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEdit"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Edit"
-                app:cornerRadius="8dp"
-                android:backgroundTint="@color/primary"
-                android:textColor="@android:color/white"
-                android:layout_marginEnd="8dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDelete"
-                android:backgroundTint="@color/primary"
-                android:textColor="@android:color/white"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Delete"
-                 />
-        </LinearLayout>
-
-        <!-- Expandable Details Section -->
-        <LinearLayout
-            android:id="@+id/detailsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:paddingTop="8dp">
-
-            <TextView
-                android:id="@+id/tvWhatToMake"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="What to make: Oats and Fruits"
-                android:textSize="16sp"
-                android:textColor="@color/black"
-                android:layout_marginBottom="6dp" />
-
-            <TextView
-                android:id="@+id/tvWhatToAvoid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="What to avoid: Deep-fried food"
-                android:textSize="16sp"
-                android:textColor="@color/black" />
-        </LinearLayout>
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDelete"
+        style="@style/Widget.MaterialComponents.Button"
+        android:backgroundTint="@color/primary"
+        android:textColor="@android:color/white"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Delete"
+        android:padding="12dp" />
+</LinearLayout>
+</LinearLayout>
+    </androidx.cardview.widget.CardView>

@@ -1,12 +1,12 @@
 package com.chaitany.agewell
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import android.os.Handler
-import android.Manifest
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.os.Bundle
+import android.os.Handler
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -38,7 +38,9 @@ class Splash : AppCompatActivity() {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.SEND_SMS,
-                    Manifest.permission.CALL_PHONE
+                    Manifest.permission.CALL_PHONE,
+                    Manifest.permission.WRITE_CALENDAR,
+                    Manifest.permission.READ_CALENDAR
                 ),
                 PERMISSIONS_REQUEST_CODE
             )
@@ -62,7 +64,12 @@ class Splash : AppCompatActivity() {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.SEND_SMS,
-            Manifest.permission.CALL_PHONE
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.WRITE_CALENDAR,
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.VIBRATE,
+            Manifest.permission.RECEIVE_BOOT_COMPLETED
+
         )
         for (permission in permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
@@ -109,4 +116,7 @@ class Splash : AppCompatActivity() {
             }
         }
     }
+
+
+
 }

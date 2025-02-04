@@ -71,7 +71,12 @@ public class EmergencyContact extends AppCompatActivity implements ContactsAdapt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_emergency_contact);
+
+
+
         context=this;
         addContactFab=findViewById(R.id.addContactFab);
         sendLocationButton=findViewById(R.id.sendLocationButton);
@@ -155,6 +160,12 @@ public class EmergencyContact extends AppCompatActivity implements ContactsAdapt
     private void initializeViews() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false); // This hides the app name
+        }
 
         contactsRecyclerView = findViewById(R.id.contactsRecyclerView);
         searchView = findViewById(R.id.searchView);

@@ -50,7 +50,8 @@
                         android:layout_marginTop="10dp"
 
                         android:id="@+id/menubars"
-                        android:src="@drawable/barsstaggered"
+                        android:src="@drawable/ic_menu"
+                        android:tint="@color/primary"
                         />
                     <RelativeLayout
                         android:layout_width="match_parent"

@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="4dp">
+    app:cardElevation="10dp"
+    app:strokeWidth="1dp"
+    android:outlineSpotShadowColor="@color/primary"
+    android:outlineAmbientShadowColor="@color/secondary"
+    app:strokeColor="@color/gray">
 
-    <LinearLayout
+<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -20,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="4dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -60,18 +64,18 @@
                     android:id="@+id/ivEdit"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_edit"
+                    android:src="@drawable/ic_edit"
                     android:contentDescription="Edit"
-                    android:tint="#10B981"
-                    android:layout_marginEnd="16dp"/>
+                    android:layout_marginEnd="16dp"
+                    app:tint="@color/gray" />
 
                 <ImageView
                     android:id="@+id/ivDelete"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_delete"
+                    android:src="@drawable/ic_delete"
                     android:contentDescription="Delete"
-                    android:tint="#10B981"/>
+                    app:tint="@color/gray" />
             </LinearLayout>
         </LinearLayout>
 
@@ -80,8 +84,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="24dp">
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -103,35 +107,44 @@
         </LinearLayout>
 
         <!-- Schedule Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Daily Schedule"
-            android:textSize="16sp"
-            android:textColor="#374151"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Schedule Times -->
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupSchedule"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:singleSelection="false"
-            app:chipSpacing="12dp">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
 
-            <!-- Chips will be added dynamically, but here's the styling they should use -->
-            <!-- Morning -->
-            <com.google.android.material.chip.Chip
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Morning"
-                app:chipIcon="@android:drawable/ic_menu_recent_history"
-                app:chipBackgroundColor="#E8F5E9"
-                app:chipStrokeColor="#10B981"
-                app:chipStrokeWidth="1dp"
-                app:textEndPadding="12dp"
-                app:textStartPadding="12dp"/>
-        </com.google.android.material.chip.ChipGroup>
+                android:text="Daily Schedule"
+                android:textSize="16sp"
+                android:textColor="#374151"
+                android:layout_marginRight="40dp"/>
+
+            <!-- Schedule Times -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupSchedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="false"
+                app:chipSpacing="12dp">
+
+                <!-- Chips will be added dynamically, but here's the styling they should use -->
+                <!-- Morning -->
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Morning"
+                    app:chipIcon="@android:drawable/ic_menu_recent_history"
+                    app:chipBackgroundColor="#E8F5E9"
+                    app:chipStrokeColor="#10B981"
+                    app:chipStrokeWidth="1dp"
+                    app:textEndPadding="12dp"
+                    app:textStartPadding="12dp"/>
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+
 
         <!-- Meal Times -->
         <TextView
@@ -144,4 +157,4 @@
             android:layout_marginTop="8dp"/>
 
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

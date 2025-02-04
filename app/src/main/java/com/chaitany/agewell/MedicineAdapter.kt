@@ -48,6 +48,7 @@
                 holder.scheduleChipGroup.addView(chip)
             }
 
+
             // Edit and Delete Button Click Listeners
             holder.ivEdit.setOnClickListener { onEditClick(medicine) }
             holder.ivDelete.setOnClickListener { onDeleteClick(medicine) }

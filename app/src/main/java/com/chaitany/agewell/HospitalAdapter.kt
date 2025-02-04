@@ -1,6 +1,7 @@
-package com.chaitany.agewell.com.chaitany.agewell
+package com.chaitany.agewell
 
 import android.content.Intent
+import android.location.Location
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,12 @@ data class Hospital(
     val importance: Double?,
     val boundingBox: List<String>?
 )
-class HospitalAdapter(private val hospitalList: List<Hospital>, hospitalActivity: HospitalActivity) : RecyclerView.Adapter<HospitalAdapter.HospitalViewHolder>() {
+
+class HospitalAdapter(
+    private val hospitalList: List<Hospital>,
+    private val userLat: Double, // User's latitude
+    private val userLon: Double // User's longitude
+) : RecyclerView.Adapter<HospitalAdapter.HospitalViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HospitalViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_hospital, parent, false)
@@ -32,13 +38,12 @@ class HospitalAdapter(private val hospitalList: List<Hospital>, hospitalActivity
         val hospital = hospitalList[position]
         holder.nameTextView.text = hospital.name
         holder.displayNameTextView.text = hospital.displayName
-        holder.latTextView.text = "Latitude: ${hospital.lat}"
-        holder.lonTextView.text = "Longitude: ${hospital.lon}"
-        holder.placeIdTextView.text = "Place ID: ${hospital.placeId ?: "N/A"}"
-        holder.addressTypeTextView.text = "Address Type: ${hospital.addressType ?: "N/A"}"
-        holder.importanceTextView.text = "Importance: ${hospital.importance ?: "N/A"}"
-        holder.boundingBoxTextView.text = "Bounding Box: ${hospital.boundingBox?.joinToString(", ") ?: "N/A"}"
 
+        // Calculate and set the distance
+        val distance = calculateDistance(userLat, userLon, hospital.lat, hospital.lon)
+        holder.distanceTextView.text = "Distance: $distance km"
+
+        // Open Google Maps Navigation
         holder.startNavigatingButton.setOnClickListener {
             val gmmIntentUri = Uri.parse("google.navigation:q=${hospital.lat},${hospital.lon}")
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
@@ -51,13 +56,16 @@ class HospitalAdapter(private val hospitalList: List<Hospital>, hospitalActivity
 
     class HospitalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
+        val distanceTextView: TextView = itemView.findViewById(R.id.distanceTextView)
         val displayNameTextView: TextView = itemView.findViewById(R.id.displayNameTextView)
-        val latTextView: TextView = itemView.findViewById(R.id.latTextView)
-        val lonTextView: TextView = itemView.findViewById(R.id.lonTextView)
-        val placeIdTextView: TextView = itemView.findViewById(R.id.placeIdTextView)
-        val addressTypeTextView: TextView = itemView.findViewById(R.id.addressTypeTextView)
-        val importanceTextView: TextView = itemView.findViewById(R.id.importanceTextView)
-        val boundingBoxTextView: TextView = itemView.findViewById(R.id.boundingBoxTextView)
         val startNavigatingButton: Button = itemView.findViewById(R.id.startNavigatingButton)
+    }
+
+    // Function to calculate distance in km
+    private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): String {
+        val results = FloatArray(1)
+        Location.distanceBetween(lat1, lon1, lat2, lon2, results)
+        val distanceInKm = results[0] / 1000 // Convert meters to km
+        return String.format("%.2f", distanceInKm) // Format to 2 decimal places
     }
 }

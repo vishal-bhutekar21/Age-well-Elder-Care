@@ -18,8 +18,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-import com.chaitany.agewell.com.chaitany.agewell.Hospital
-import com.chaitany.agewell.com.chaitany.agewell.HospitalAdapter
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
@@ -28,15 +26,20 @@ import java.io.IOException
 class HospitalActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
+    lateinit var loadingdialog:LoadingDialog
     private lateinit var hospitalAdapter: HospitalAdapter
     private var hospitalList: MutableList<Hospital> = mutableListOf()
 
     private lateinit var locationManager: LocationManager
     private lateinit var locationListener: LocationListener
+    var userLat = 19.8762 // Example: Replace with actual user location
+    var userLon = 75.3433
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hospital)
+        loadingdialog=LoadingDialog(this);
+        loadingdialog.showLoadingDialog();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -48,7 +51,7 @@ class HospitalActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        hospitalAdapter = HospitalAdapter(hospitalList, this)
+        hospitalAdapter = HospitalAdapter(hospitalList, userLat,userLon)
         recyclerView.adapter = hospitalAdapter
 
         // Initialize LocationManager
@@ -59,6 +62,8 @@ class HospitalActivity : AppCompatActivity() {
             override fun onLocationChanged(location: Location) {
                 val latitude = location.latitude
                 val longitude = location.longitude
+                userLat=latitude
+                userLon=longitude
                 // Fetch nearby hospitals using the current location
                 getNearbyHospitals(latitude, longitude)
             }
@@ -128,7 +133,7 @@ class HospitalActivity : AppCompatActivity() {
 
     // Fetch nearby hospitals based on the location
     private fun getNearbyHospitals(latitude: Double, longitude: Double) {
-        val url = "https://nominatim.openstreetmap.org/search?q=hospitals+near+$latitude,$longitude&format=json&addressdetails=1&limit=5"
+        val url = "https://nominatim.openstreetmap.org/search?q=hospitals+near+$latitude,$longitude&format=json&addressdetails=1&limit=10"
 
         val client = OkHttpClient()
         val request = Request.Builder()
@@ -179,6 +184,7 @@ class HospitalActivity : AppCompatActivity() {
 
                             // Update RecyclerView with new data on the main thread
                             runOnUiThread {
+                                loadingdialog.dismissLoadingDialog();
                                 hospitalAdapter.notifyDataSetChanged()
                             }
                         } catch (e: Exception) {

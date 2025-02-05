@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
     android:gravity="center"
@@ -25,12 +26,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="Login Here! "
         android:textAlignment="center"
-        android:textStyle="normal"
+        android:textStyle="bold"
         android:textColor="@color/primary"
         android:textSize="30dp"
-        android:fontFamily="sans-serif-condensed-medium"
+        android:textFontWeight="600"
+
+        android:fontFamily="sans-serif-condensed"
         android:layout_margin="10dp"
         />
     <com.google.android.material.textfield.TextInputLayout
@@ -97,21 +100,20 @@
                />
        </LinearLayout>
 
-       <Button
+       <com.google.android.material.button.MaterialButton
            android:id="@+id/btnLoginNow"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:textSize="17dp"
-           android:text="Login Now"
-           android:paddingHorizontal="30dp"
+           android:theme="@style/Theme.AgeWellSuper"
+           android:text="Login"
+           android:gravity="center"
+           app:cornerRadius="16dp"
+           app:iconGravity="start"
+           android:textSize="20dp"
            android:drawableRight="@drawable/slogin"
-           android:drawablePadding="50dp"
            android:drawableTint="@color/white"
-            android:textColor="#FFFFFF"
-           android:backgroundTint="@color/primary"
-       android:layout_marginBottom="5dp"
-       android:padding="16dp"
-           />
+           android:paddingHorizontal="100sp"
+           android:layout_margin="10dp"/>
 
 
        <TextView

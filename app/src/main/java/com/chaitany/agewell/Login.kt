@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.yourapp.utils.UserPreferences
+import com.google.android.material.button.MaterialButton
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -20,7 +21,7 @@ class Login : AppCompatActivity() {
 
     private lateinit var mobileEditText: EditText
     private lateinit var passwordEditText: EditText
-    private lateinit var loginButton: Button
+    private lateinit var loginButton: MaterialButton
     private lateinit var signUpButton: Button
     private lateinit var progressDialog: ProgressDialog
 

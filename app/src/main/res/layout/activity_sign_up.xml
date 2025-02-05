@@ -6,6 +6,9 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:gravity="center"
+    android:fadeScrollbars="true"
+    android:scrollbarSize="0dp"
+    android:scrollbars="none"
     android:background="?android:attr/windowBackground">
 
     <LinearLayout
@@ -25,10 +28,15 @@
             android:layout_height="wrap_content"
             android:text="Create Account"
             android:textAlignment="center"
-            android:textStyle="normal"
+
+
+            android:textStyle="bold"
             android:textColor="@color/primary"
-            android:textSize="20dp"
-            android:fontFamily="sans-serif-condensed-medium"
+            android:textSize="30dp"
+            android:textFontWeight="600"
+
+            android:fontFamily="sans-serif-condensed"
+
             android:layout_margin="5dp"
             />
         <TextView
@@ -36,7 +44,7 @@
             android:layout_height="wrap_content"
             android:text="Join us to start your wellness journey"
             android:textAlignment="center"
-            android:textStyle="normal"
+            android:textStyle="bold"
             android:textColor="@color/gray"
             android:textSize="11dp"
             android:fontFamily="sans-serif"
@@ -141,6 +149,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Location"
+
             android:drawableLeft="@drawable/slocation"
             android:drawablePadding="10dp"
             android:inputType="text"/>
@@ -179,9 +188,13 @@
         android:layout_height="wrap_content"
         android:theme="@style/Theme.AgeWellSuper"
         android:text="Sign Up"
+        android:gravity="center"
+        app:cornerRadius="16dp"
+        app:iconGravity="start"
+        android:textSize="20dp"
         android:drawableRight="@drawable/slogin"
         android:drawableTint="@color/white"
-        android:drawablePadding="20dp"
+        android:paddingHorizontal="100sp"
         android:layout_margin="10dp"/>
 
 

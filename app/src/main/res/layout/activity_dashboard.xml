@@ -171,7 +171,8 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_afternoon" />
+                        android:tint="@color/warning"
+                        android:src="@drawable/afternoon" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -197,7 +198,8 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_night" />
+                        android:tint="@color/blue"
+                        android:src="@drawable/moon" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -292,15 +294,15 @@
                 android:background="@drawable/empty_shape"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:backgroundTint="#2A3F51B5"
+                android:backgroundTint="#2CEF3DD7"
                 android:padding="16dp"
                 android:layout_margin="8dp"
                >
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/instock"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_medical"
 
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />
@@ -333,7 +335,7 @@
                 android:layout_rowWeight="1"
                 android:padding="16dp"
                 android:layout_margin="8dp"
-                android:backgroundTint="#EDE9FE">
+                android:backgroundTint="#3D8D33E2">
 
                 <ImageView
                     android:layout_width="32dp"
@@ -441,12 +443,12 @@
                 android:layout_rowWeight="1"
                 android:padding="16dp"
                 android:layout_margin="8dp"
-                android:backgroundTint="#4D2196F3">
+                android:backgroundTint="#372196F3">
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/conversation"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:src="@drawable/ic_elderconnect"
 
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />
@@ -463,7 +465,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:text="read good advices"
+
+                    android:text="Connect and Share good advices"
                     android:textColor="#6B7280"
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
@@ -482,9 +485,9 @@
                 >
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/exercises"
+                    android:layout_width="52dp"
+                    android:layout_height="42dp"
+                    android:src="@drawable/exercising"
 
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />
@@ -517,12 +520,12 @@
                 android:layout_rowWeight="1"
                 android:padding="16dp"
                 android:layout_margin="8dp"
-                android:backgroundTint="#79F4C67D">
+                android:backgroundTint="#347DF4E8">
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/meal"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_meal"
 
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />
@@ -538,8 +541,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Healthy eating"
+                    android:text="Weakly Healthy eating Plan"
                     android:textColor="#6B7280"
+                    android:textAlignment="center"
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
 
@@ -553,12 +557,12 @@
                 android:layout_rowWeight="1"
                 android:padding="16dp"
                 android:layout_margin="8dp"
-                android:backgroundTint="#96FF6D00">
+                android:backgroundTint="#19E60E15">
 
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_hospital"
+                    android:src="@drawable/hospital"
 
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp" />

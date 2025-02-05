@@ -74,6 +74,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
+                    android:textStyle="bold"
                     android:padding="8dp"
                     android:background="@drawable/bg_mint_rounded">
 
@@ -81,6 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="This Month"
+                        android:textStyle="bold"
                         android:textColor="@color/mint"/>
 
                     <TextView
@@ -101,12 +103,13 @@
                     android:orientation="vertical"
                     android:layout_marginStart="8dp"
                     android:padding="8dp"
-                    android:background="@drawable/bg_warning_rounded">
+                    android:background="@color/warning_light">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Upcoming"
+                        android:textStyle="bold"
                         android:textColor="@color/warning"/>
 
                     <TextView
@@ -127,20 +130,22 @@
                     android:orientation="vertical"
                     android:layout_marginStart="8dp"
                     android:padding="8dp"
-                    android:background="@drawable/bg_info_rounded">
+                    android:background="@color/blue_light">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Past"
-                        android:textColor="@color/black"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/info"/>
 
                     <TextView
                         android:id="@+id/text_past_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="24sp"
-                        android:textColor="#B1E47373"
+
+                        android:textColor="@color/info"
                         android:text="3"/>
 
                 </LinearLayout>

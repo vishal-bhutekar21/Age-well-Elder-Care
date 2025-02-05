@@ -38,7 +38,8 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:layout_gravity="center"
-        android:text="Sign up now and take control of your well-being"
+        android:textAlignment="center"
+        android:text="Sign up now and take control of your \nwell-being"
         android:textColor="#8C8C8C"
         android:layout_marginTop="10dp" />
 

@@ -84,14 +84,16 @@
         <FrameLayout
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:backgroundTint="@color/primary"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/down_icon">
+            android:background="@drawable/tick">
 
             <View
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:background="@drawable/down_icon"/>
+                android:backgroundTint="@color/primary"
+                android:background="@drawable/tick"/>
 
         </FrameLayout>
 

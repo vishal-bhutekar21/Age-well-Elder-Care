@@ -41,7 +41,7 @@ class HospitalAdapter(
 
         // Calculate and set the distance
         val distance = calculateDistance(userLat, userLon, hospital.lat, hospital.lon)
-        holder.distanceTextView.text = "Distance: $distance km"
+        holder.distanceTextView.text = " "
 
         // Open Google Maps Navigation
         holder.startNavigatingButton.setOnClickListener {

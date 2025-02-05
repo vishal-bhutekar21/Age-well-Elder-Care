@@ -21,7 +21,7 @@ public class OnBoardingActivity extends AppCompatActivity {
     private final int[] images = {
             R.drawable.img_onboard2,
             R.drawable.img_onboard1,
-            R.drawable.img_onboard4,
+            R.drawable.onboarding4,
             R.drawable.img_onboard3,
             R.drawable.img_onboard5,
             R.drawable.img_onboard6

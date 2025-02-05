@@ -31,6 +31,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="10dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.button.MaterialButton
@@ -47,12 +49,12 @@
             android:id="@+id/btnNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="NEXT"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            android:textColor="#0F766E"
+            android:layout_marginStart="150dp"
             android:backgroundTint="#F0FDFA"
-            android:layout_marginStart="150dp" />
+            android:text="NEXT"
+            android:textColor="#0F766E"
+            android:textSize="15dp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>

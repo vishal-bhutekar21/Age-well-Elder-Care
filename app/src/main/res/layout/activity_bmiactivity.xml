@@ -20,31 +20,47 @@
             android:background="@color/white">
 
             <!-- Header -->
-            <LinearLayout
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical">
+                android:layout_height="?attr/actionBarSize"
+                android:elevation="4dp"
 
-                <ImageButton
-                    android:id="@+id/menuButton"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+
+                app:layout_constraintTop_toTopOf="parent">
+
+                <!-- Menu Icon (Hamburger) -->
+                <ImageView
+                    android:id="@+id/ivMenu"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="16dp"
                     android:src="@drawable/ic_menu"
-                    android:contentDescription="Menu"/>
+                    android:contentDescription="Menu"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <!-- Title in Center -->
                 <TextView
+                    android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="BMI Calculator"
-                    android:textSize="24sp"
-                    android:textColor="#1a1a1a"
+                    android:layout_marginLeft="10dp"
+                    android:text="BMI Calculator "
+                    android:textSize="20sp"
                     android:textStyle="bold"
-                    android:layout_marginStart="16dp"/>
-            </LinearLayout>
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
+                <!-- Notification Bell -->
+
+
+            </androidx.appcompat.widget.Toolbar>
             <!-- Main Content -->
             <ScrollView
                 android:layout_width="match_parent"

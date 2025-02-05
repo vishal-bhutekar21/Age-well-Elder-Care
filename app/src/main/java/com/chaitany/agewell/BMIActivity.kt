@@ -19,6 +19,10 @@ class BMIActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityBmiactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        window.statusBarColor = getColor(android.R.color.white) // Set status bar color to white
+        actionBar?.hide()
+
 
         binding.calculateButton.setOnClickListener {
             calculateBMI()

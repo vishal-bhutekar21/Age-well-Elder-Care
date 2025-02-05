@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
-
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
@@ -21,16 +19,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
-
     <!-- Permission to monitor phone state -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <!-- Permission for receiving boot completed event -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-
-
-
 
     <application
         android:allowBackup="true"
@@ -40,98 +33,74 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AgeWell"
+        android:theme="@style/Theme.AgeWellSuper"
         tools:targetApi="31">
-
-
-
-
 
         <activity
             android:name=".HospitalActivity"
             android:exported="false" />
         <activity
             android:name=".OurFeedbacks"
-            android:exported="false"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="false" />
         <activity
             android:name=".ForgotPassword"
-            android:exported="false"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="false" />
         <activity
             android:name=".OTP"
-            android:exported="false"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="false" />
         <activity
             android:name=".SignUp"
-            android:exported="false"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="false" />
         <activity
             android:name=".globalchat"
-            android:exported="false"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="false" />
         <activity
             android:name=".BMIActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="false" />
         <activity
             android:name=".MealPlanner"
-            android:exported="false"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="false" />
         <activity
             android:name=".OnBoardingActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="true" />
         <activity
             android:name=".EmergencyContact"
-            android:exported="true"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="true" />
         <activity
             android:name=".ActivityAppointment"
-            android:exported="false"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="false" />
         <activity
             android:name=".AddMedicineActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="false" />
         <activity
             android:name=".MedicalStockActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="false" />
         <activity
             android:name=".Dashboard"
-            android:exported="true"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="true" />
         <activity
             android:name=".ProfileActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="true" />
         <activity
             android:name=".AboutActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="true" />
         <activity
             android:name=".FeedbackActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="true" />
         <activity
             android:name=".Exercise_suggestion"
-            android:exported="true"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="true" />
         <activity
             android:name=".GetStartedActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AgeWellSuper" />
+            android:exported="true" />
         <activity
             android:name=".Login"
-            android:exported="true"
-            android:theme="@style/Theme.AgeWellSuper"></activity>
+            android:exported="true" />
         <activity
             android:name=".Splash"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

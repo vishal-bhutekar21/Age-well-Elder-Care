@@ -1,10 +1,14 @@
 package com.chaitany.agewell;
 
 import android.animation.ObjectAnimator;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -36,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -60,12 +65,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     private ImageView menuButton;
     private DatabaseReference tasksRef;
     private String userPhone;
+    private static final String PREFS_TIME_BLOCKS = "time_blocks";
+    private static final String KEY_MORNING_COMPLETED = "morning_done";
+    private static final String KEY_AFTERNOON_COMPLETED = "afternoon_done";
+    private static final String KEY_NIGHT_COMPLETED = "night_done";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_dashboard);
+        NotificationHelper.createChannel(this);
+        checkNotificationPermissions();
+        scheduleDailyChecks();
 
         sharedPreferences = getSharedPreferences("UserLogin", Context.MODE_PRIVATE);
         userPhone = sharedPreferences.getString("mobile", null);
@@ -89,6 +101,94 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         setupClickListeners();
         setupTaskSections();
         loadTasks();
+    }
+
+
+
+    private void checkNotificationPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                        101
+                );
+            }
+        }
+    }
+
+    private void scheduleDailyChecks() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent intent = new Intent(this, TaskReminderReceiver.class);
+
+        // Schedule for 12 PM (noon)
+        scheduleAlarm(alarmManager, intent, 12);
+        // Schedule for 6 PM
+        scheduleAlarm(alarmManager, intent, 18);
+        // Schedule for 9 PM
+        scheduleAlarm(alarmManager, intent, 21);
+    }
+    public static void triggerTimeBasedCheck(Context context) {
+        // Check morning tasks (after 12 PM)
+        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 12) {
+            checkAndNotifyForTimeBlock(context, KEY_MORNING_COMPLETED, "morning");
+        }
+
+        // Check afternoon tasks (after 6 PM)
+        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 18) {
+            checkAndNotifyForTimeBlock(context, KEY_AFTERNOON_COMPLETED, "afternoon");
+        }
+
+        // Check night tasks (after 9 PM)
+        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 21) {
+            checkAndNotifyForTimeBlock(context, KEY_NIGHT_COMPLETED, "night");
+        }
+    }
+
+    private static void checkAndNotifyForTimeBlock(Context context, String prefKey, String timeBlockName) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_TIME_BLOCKS, MODE_PRIVATE);
+        if (!prefs.getBoolean(prefKey, false)) {
+            NotificationHelper.showNotification(
+                    context,
+                    "You have incomplete " + timeBlockName + " tasks!"
+            );
+        }
+    }
+
+    private void scheduleAlarm(AlarmManager alarmManager, Intent intent, int hour) {
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this,
+                hour, // Unique request code for each alarm
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE // Add FLAG_IMMUTABLE here
+        );
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        alarmManager.setInexactRepeating(
+                AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY,
+                pendingIntent
+        );
+    }    private void checkTimeBasedTasks() {
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+
+        SharedPreferences prefs = getSharedPreferences(PREFS_TIME_BLOCKS, MODE_PRIVATE);
+
+        if (hour >= 12 && !prefs.getBoolean(KEY_MORNING_COMPLETED, false)) {
+            NotificationHelper.showNotification(this, "Complete your morning tasks!");
+        }
+        if (hour >= 18 && !prefs.getBoolean(KEY_AFTERNOON_COMPLETED, false)) {
+            NotificationHelper.showNotification(this, "Complete your afternoon tasks!");
+        }
+        if (hour >= 21 && !prefs.getBoolean(KEY_NIGHT_COMPLETED, false)) {
+            NotificationHelper.showNotification(this, "Complete your night tasks!");
+        }
     }
 
     private void initializeViews() {
@@ -544,20 +644,37 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     }
 
     private void markTaskAsCompleted(Task task) {
-        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
+        SharedPreferences timeBlockPrefs = getSharedPreferences(PREFS_TIME_BLOCKS, MODE_PRIVATE);
+        String timeBlock = getTimeBlockForTask(task);
 
-        String taskKey = COMPLETED_TASK_PREFIX + task.getMedicineId();
-        String completionDateKey = COMPLETION_DATE_PREFIX + task.getMedicineId();
+        // Mark individual task completion
+        SharedPreferences taskPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        taskPrefs.edit()
+                .putBoolean(COMPLETED_TASK_PREFIX + task.getMedicineId(), true)
+                .putString(COMPLETION_DATE_PREFIX + task.getMedicineId(), getCurrentDate())
+                .apply();
 
-        // Store the current date as the completion date
-        String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        editor.putString(completionDateKey, currentDate);
+        // Check if all tasks in this time block are completed
+        if (allTasksInTimeBlockCompleted(timeBlock)) {
+            timeBlockPrefs.edit().putBoolean(timeBlock, true).apply();
+        }
+    }
 
-        // Mark the task as completed
-        editor.putBoolean(taskKey, true);
+    private String getTimeBlockForTask(Task task) {
+        String time = task.getTime().toLowerCase();
+        if (time.contains("morning")) return KEY_MORNING_COMPLETED;
+        if (time.contains("afternoon")) return KEY_AFTERNOON_COMPLETED;
+        return KEY_NIGHT_COMPLETED;
+    }
 
-        editor.apply(); // Apply changes to SharedPreferences
+    private boolean allTasksInTimeBlockCompleted(String timeBlockKey) {
+        // Implement logic to check if all tasks in the time block are completed
+        // This might require querying your Firebase tasks
+        return false; // Temporary return value
+    }
+
+    private String getCurrentDate() {
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
     }
 
     private boolean isTaskCompleted(Task task) {
@@ -580,29 +697,24 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     }
 
     private void handleNewDay() {
-        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        // Reset time block completions
+        SharedPreferences timeBlockPrefs = getSharedPreferences(PREFS_TIME_BLOCKS, MODE_PRIVATE);
+        timeBlockPrefs.edit()
+                .remove(KEY_MORNING_COMPLETED)
+                .remove(KEY_AFTERNOON_COMPLETED)
+                .remove(KEY_NIGHT_COMPLETED)
+                .apply();
 
-        // Iterate through all tasks and check if they should be marked incomplete for the new day
-        Map<String, ?> allPrefs = preferences.getAll();
-        for (Map.Entry<String, ?> entry : allPrefs.entrySet()) {
-            String key = entry.getKey();
-
-            // Check if the key is a completion date key (based on the format)
-            if (key.startsWith(COMPLETION_DATE_PREFIX)) {
-                String storedDate = (String) entry.getValue();
-
-                // If the stored date is not today's date, reset the task to incomplete
-                if (!currentDate.equals(storedDate)) {
-                    String medicineId = key.substring(COMPLETION_DATE_PREFIX.length());
-                    String taskKey = COMPLETED_TASK_PREFIX + medicineId;
-
-                    preferences.edit().putBoolean(taskKey, false).apply();
-                }
+        // Reset individual task completions
+        SharedPreferences taskPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = taskPrefs.edit();
+        for (Map.Entry<String, ?> entry : taskPrefs.getAll().entrySet()) {
+            if (entry.getKey().startsWith(COMPLETED_TASK_PREFIX)) {
+                editor.remove(entry.getKey());
             }
         }
+        editor.apply();
     }
-
 
 
     private void resetTasksForNewDay() {

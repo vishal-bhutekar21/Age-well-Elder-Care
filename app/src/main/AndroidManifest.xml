@@ -18,6 +18,10 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <!-- Permission to monitor phone state -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -105,6 +109,16 @@
             </intent-filter>
         </activity>
         <receiver android:name=".NotificationReceiver" />
+
+        <service
+            android:name=".TaskCheckService"
+            android:exported="false"
+            android:stopWithTask="true"/>
+
+        <receiver
+            android:name=".TaskReminderReceiver"
+            android:enabled="true"
+            android:exported="false"/>
     </application>
 
 </manifest>

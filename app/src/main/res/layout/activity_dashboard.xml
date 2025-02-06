@@ -95,14 +95,15 @@
                             android:padding="3dp">
 
                             <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
+                                android:id="@+id/meta"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginEnd="5dp"
 
                                 android:backgroundTint="@color/gray_800"
-                                android:padding="5dp"
-                                android:src="@drawable/ic_noti" />
+
+                                android:src="@drawable/meta" />
 
                             <ImageView
                                 android:id="@+id/user_png_dot"

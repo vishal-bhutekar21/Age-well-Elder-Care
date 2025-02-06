@@ -62,7 +62,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     private LinearLayout layoutEmergencyContact, layoutMedicalStock, layoutHealthMonitor, layoutmealplan,
             layout_bmi_index, layout_elder_connect, layout_exercise,layout_hospital;
     private LinearLayout morningTasksLayout, afternoonTasksLayout, nightTasksLayout;
-    private ImageView menuButton;
+    private ImageView menuButton,meta;
     private DatabaseReference tasksRef;
     private String userPhone;
     private static final String PREFS_TIME_BLOCKS = "time_blocks";
@@ -203,6 +203,9 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         layout_elder_connect = findViewById(R.id.layout_elder_connect);
         layout_exercise = findViewById(R.id.layoutexercise);
         layout_hospital=findViewById(R.id.nearbyhospital);
+        meta=findViewById(R.id.meta);
+
+
 
         // Initialize task section layouts
         morningTasksLayout = findViewById(R.id.morningTasksLayout);
@@ -737,7 +740,16 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         layoutmealplan.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, MealPlanner.class)));
         layout_exercise.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, Exercise_suggestion.class)));
         layout_hospital.setOnClickListener(v -> startActivity(new Intent(Dashboard.this, HospitalActivity.class)));
+
+        meta.setOnClickListener(v->{
+
+
+
+            startActivity(new Intent(Dashboard.this, AiActivity.class));
+        });
     }
+
+
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
